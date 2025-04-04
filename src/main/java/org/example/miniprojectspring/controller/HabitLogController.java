@@ -2,6 +2,7 @@ package org.example.miniprojectspring.controller;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.example.miniprojectspring.model.dto.response.ApiResponse;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @RestController
 @RequestMapping("/api/v1/habit-logs")
 @RequiredArgsConstructor
+@Tag(name = "HabitLog Controller")
 public class HabitLogController {
 
     @Operation(summary = "Create a new habit log")

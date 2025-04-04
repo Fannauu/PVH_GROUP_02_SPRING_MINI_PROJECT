@@ -10,4 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 //@Builder
 public class AchievementRequest {
+    private String achieveName;
+    private String title;
+    private String description;
+    private String badge;
+    private Integer xpRequired;
 }

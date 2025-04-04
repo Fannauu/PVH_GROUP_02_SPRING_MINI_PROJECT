@@ -2,6 +2,7 @@ package org.example.miniprojectspring.controller;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.miniprojectspring.model.dto.response.ApiResponse;
 import org.example.miniprojectspring.model.entity.Habit;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/habits")
 @RequiredArgsConstructor
+@Tag(name = "Habit Controller")
 public class HabitController {
 
     @Operation(summary = "Get all habits")
