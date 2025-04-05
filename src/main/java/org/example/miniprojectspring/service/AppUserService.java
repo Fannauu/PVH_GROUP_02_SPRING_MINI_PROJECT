@@ -7,5 +7,5 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface AppUserService extends UserDetailsService {
     AppUser register(AppUserRequest request);
     AppUser getUserByEmail(String email);
-        void save(AppUser user, String password);
+    void save(AppUser user, String password);
 }

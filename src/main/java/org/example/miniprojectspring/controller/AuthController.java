@@ -111,6 +111,7 @@ public class AuthController {
     public ResponseEntity<?> authenticate(@RequestBody AppUserLoginRequest appUserLoginRequest) throws Exception {
         // Load user
         UserDetails userDetails = appUserService.loadUserByUsername(appUserLoginRequest.getIdentifier());
+        System.out.println(appUserLoginRequest.getIdentifier());
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("User not found with email: " + appUserLoginRequest.getIdentifier());
