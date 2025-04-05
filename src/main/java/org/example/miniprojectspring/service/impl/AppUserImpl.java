@@ -32,7 +32,7 @@ public class AppUserImpl implements AppUserService {
 
     public UserDTO getAuthenticatedUser() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(authentication.getName());
+//        System.out.println(authentication.getName());
         AppUser appUser = appUserRepository.getUserBYEmail(authentication.getName());
         UserDTO userDTO = appUser.toDto(appUser);
         return userDTO;

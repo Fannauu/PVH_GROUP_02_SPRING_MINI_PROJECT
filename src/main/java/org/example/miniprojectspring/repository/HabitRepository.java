@@ -16,21 +16,25 @@ public interface HabitRepository {
         SELECT * FROM habits
     """)
     @Results(id="habitMapper", value = {
+            @Result(property = "name", column = "username"),
+            @Result(property = "profileImage", column = "profile_image"),
+            @Result(property = "xpLevel", column = "xp"),
             @Result(property = "id",column = "habit_id",typeHandler = UUIDTypeHandler.class),
             @Result(property = "isActive",column = "is_active"),
             @Result(property = "createAt",column = "created_at"),
-            @Result(property = "appUser",column = "app_user_id",
-                    one = @One(select = "getUserByUserId")
+            @Result(property = "appUser",column = "email",
+                    one = @One(select = "org.example.miniprojectspring.repository.AppUserRepository.getUserBYEmail")
             )
     })
-    List<Habit> getAllHabits();
+    List<Habit> getAllHabits(String email);
 
 
 
-    @Select("""
-            SELECT * FROM app_users where app_user_id = '8b52b756-eeaf-4a50-9e82-a22f7c47454a'
-            """)
-    AppUser getUserByUserId(UUID habitId);
+//    @Select("""
+//            SELECT * FROM app_users where email = #{email}
+//            """)
+////    @Result(property = "",column = "app_user_id",typeHandler = UUIDTypeHandler.class)
+//    AppUser getUserByUserId(String email);
 
     Habit postHabits(HabitRequest habitRequest);
 }

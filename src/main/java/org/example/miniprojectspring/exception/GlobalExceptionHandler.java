@@ -24,7 +24,7 @@ import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-
+//
 //    @ExceptionHandler(IllegalArgumentException.class)
 //    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
 //        ErrorResponse errorResponse = ErrorResponse.builder()
