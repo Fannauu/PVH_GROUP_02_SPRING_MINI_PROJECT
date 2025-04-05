@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 //@Builder
 public class File {
+    private String fileName;
 }
