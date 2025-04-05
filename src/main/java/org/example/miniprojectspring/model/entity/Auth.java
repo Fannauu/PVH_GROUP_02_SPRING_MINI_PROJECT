@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+//@Data
+//@AllArgsConstructor
+//@NoArgsConstructor
 //@Builder
 public class Auth {
-    private UUID id;
+//    private UUID id;
 }

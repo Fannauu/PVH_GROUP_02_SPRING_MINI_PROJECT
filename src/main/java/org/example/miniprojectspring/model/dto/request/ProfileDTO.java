@@ -4,13 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@Builder
-public class ProfileRequest {
-    private String name;
-    private String profileImage;
+
+public class ProfileDTO {
+    private String identifier;
+    private String password;
 }
