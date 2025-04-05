@@ -8,10 +8,7 @@ import org.example.miniprojectspring.model.entity.Achievement;
 import org.example.miniprojectspring.service.AchievementService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,14 +20,15 @@ import java.util.UUID;
 public class AchievementController {
     private final AchievementService achievementService;
 
+
     @Operation(summary = "Get all achievements" )
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Achievement>>> getAchievements() {
+    public ResponseEntity<ApiResponse<List<Achievement>>> getAchievements(@RequestParam(defaultValue = "1") Integer page,@RequestParam(defaultValue = "10") Integer size) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.<List<Achievement>>builder()
                         .success(true)
                         .message("Get all achievements successfully")
-                        .payload(achievementService.getAchievements())
+                        .payload(achievementService.getAchievements(page,size))
                         .httpStatus(HttpStatus.OK)
                         .timestamp(LocalDateTime.now())
                         .build()

@@ -8,5 +8,5 @@ import java.util.UUID;
 public interface AchievementService {
     Achievement getAchievementByAppUserId(UUID achievementId);
 
-    List<Achievement> getAchievements();
+    List<Achievement> getAchievements(Integer page, Integer size);
 }

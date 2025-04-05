@@ -23,7 +23,7 @@ public class AchievementServiceImpl implements AchievementService {
     }
 
     @Override
-    public List<Achievement> getAchievements() {
-        return achievementRepo.getAchievements();
+    public List<Achievement> getAchievements(Integer page, Integer size) {
+        return achievementRepo.getAchievements(page,size);
     }
 }

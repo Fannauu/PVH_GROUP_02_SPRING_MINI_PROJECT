@@ -25,5 +25,5 @@ public interface AchievementRepo {
         SELECT * FROM  achievements;
     """)
     @ResultMap("AchievementMapper")
-    List<Achievement> getAchievements();
+    List<Achievement> getAchievements(Integer page,Integer size);
 }
