@@ -29,7 +29,7 @@ public class UserAppController {
 //                        .build()
 //        );
 //    }
-//
+
 //    @Operation(summary = "Update user profile")
 //    @PutMapping
 //    public ResponseEntity<ApiResponse<AppUser>> updateProfile() {

@@ -22,6 +22,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AchievementController {
     private final AchievementService achievementService;
+
     @Operation(summary = "Get all achievements" )
     @GetMapping
     public ResponseEntity<ApiResponse<List<Achievement>>> getAchievements() {
@@ -37,7 +38,7 @@ public class AchievementController {
     }
 
 
-//    @Operation(summary = "Get achievements by App User ID" )
+    @Operation(summary = "Get achievements by App User ID" )
     @GetMapping("/{achievement-id}")
     public ResponseEntity<ApiResponse<Achievement>> getAchievementByAppUserId( @PathVariable("achievement-id") UUID achievementId) {
         return ResponseEntity.status(HttpStatus.OK).body(
