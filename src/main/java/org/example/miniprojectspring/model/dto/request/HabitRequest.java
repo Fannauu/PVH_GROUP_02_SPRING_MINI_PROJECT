@@ -3,9 +3,7 @@ package org.example.miniprojectspring.model.dto.request;
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.UUID;
+import org.example.miniprojectspring.model.dto.response.Frequency;
 
 @Data
 @AllArgsConstructor
@@ -14,6 +12,6 @@ import java.util.UUID;
 public class HabitRequest {
     private String title;
     private String description;
-    private String frequency;
+    private Frequency frequency;
 
 }
