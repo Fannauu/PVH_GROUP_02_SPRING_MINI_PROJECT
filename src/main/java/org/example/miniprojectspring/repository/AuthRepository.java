@@ -20,4 +20,19 @@ public interface AuthRepository {
     }
     )
     AppUser register(@Param("request") @RequestBody AppUserRequest appUserRequest);
+
+
+    @Select("""
+    SELECT * FROM app_users
+    WHERE email = #{email}
+""")
+    @ResultMap("appUserMapper")
+    AppUser getUserByEmail(String email);
+
+    @Update("""
+    UPDATE app_users SET is_verified = #{request.isVerified}
+    WHERE email = #{email}
+""")
+    void save(@Param(("request")) AppUser appUser, String email);
 }
+

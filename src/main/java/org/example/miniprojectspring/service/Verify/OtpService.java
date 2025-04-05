@@ -3,22 +3,27 @@ package org.example.miniprojectspring.service.Verify;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class OtpService {
-    private final Map<String, String> otpCache = new ConcurrentHashMap<>();
-    //Save Otp
+    //Map of email -> OTP entry
+    private final Map<String, OtpEntry> otpCache = new ConcurrentHashMap<>();
+    //Save Otp with 2 minutes expiration
     public void saveOtp(String email, String otp){
-        otpCache.put(email, otp);
+        LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(2);
+        otpCache.put(email, new OtpEntry(otp, expiryTime));
     }
 
-    //Verify OTP
-    public boolean verifyOtp(String email, String otp){
-        return otp.equals(otpCache.get(email));
+    // Retrieve the OTP entry for a given email
+    public OtpEntry getOtpEntry(String email){
+        return otpCache.get(email);
     }
+
+
     // Clear OTP after verification
     public void clearOtp(String email){
         otpCache.remove(email);

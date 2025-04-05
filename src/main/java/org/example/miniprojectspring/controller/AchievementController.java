@@ -8,6 +8,7 @@ import org.example.miniprojectspring.model.entity.Achievement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,33 +20,33 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AchievementController {
 
-//    @Operation(summary = "Get all achievements" )
-//    @GetMapping
-//    public ResponseEntity<ApiResponse<List<Achievement>>> getAchievements() {
-//        return ResponseEntity.status(HttpStatus.OK).body(
-//                ApiResponse.<List<Achievement>>builder()
-//                        .success(true)
-//                        .message("Get all achievements successfully")
-//                        .payload(null)
-//                        .httpStatus(HttpStatus.OK)
-//                        .timestamp(LocalDateTime.now())
-//                        .build()
-//        );
-//    }
+    @Operation(summary = "Get all achievements" )
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<Achievement>>> getAchievements() {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.<List<Achievement>>builder()
+                        .success(true)
+                        .message("Get all achievements successfully")
+                        .payload(null)
+                        .httpStatus(HttpStatus.OK)
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
+    }
 
 
-//    @Operation(summary = "Get achievements by App AppUserRequest ID" )
-//    @GetMapping
-//    public ResponseEntity<ApiResponse<Achievement>> getAchievementByAppUserId(){
-//        return ResponseEntity.status(HttpStatus.OK).body(
-//                ApiResponse.<Achievement>builder()
-//                        .success(true)
-//                        .message("Get achievements by app user id successfully")
-//                        .payload(null)
-//                        .httpStatus(HttpStatus.OK)
-//                        .timestamp(LocalDateTime.now())
-//                        .build()
-//        );
-//    }
+    @Operation(summary = "Get achievements by App User ID" )
+    @GetMapping("/{achievement-id}")
+    public ResponseEntity<ApiResponse<Achievement>> getAchievementByAppUserId(@PathVariable("achievement-id") Integer id) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.<Achievement>builder()
+                        .success(true)
+                        .message("Get achievements by app user id successfully")
+                        .payload(null)
+                        .httpStatus(HttpStatus.OK)
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
+    }
 
 }
