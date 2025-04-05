@@ -3,6 +3,7 @@ package org.example.miniprojectspring.model.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.miniprojectspring.model.dto.response.UserDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,6 +33,14 @@ public class AppUser implements UserDetails {
     //        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     //        this.password = encoder.encode(rawPassword);
     //    }
+
+    public UserDTO toDto(AppUser userApp){
+        if (userApp == null){
+            return null;
+        }
+        return new UserDTO(id, name, email, level, xpLevel, profileImage, isVerified, createdAt);
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

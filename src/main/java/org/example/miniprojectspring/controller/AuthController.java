@@ -2,12 +2,14 @@ package org.example.miniprojectspring.controller;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.miniprojectspring.jwt.JwtService;
 import org.example.miniprojectspring.model.dto.request.AppUserRequest;
 import org.example.miniprojectspring.model.dto.request.AuthRequest;
 import org.example.miniprojectspring.model.dto.response.ApiResponse;
 import org.example.miniprojectspring.model.dto.response.AuthResponse;
+import org.example.miniprojectspring.model.dto.response.UserDTO;
 import org.example.miniprojectspring.model.entity.AppUser;
 import org.example.miniprojectspring.service.AppUserSevice;
 import org.springframework.http.HttpStatus;
@@ -46,12 +48,12 @@ public class AuthController {
 
     @Operation(summary = "User Register")
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<AppUser>> register(@RequestBody AppUserRequest appUserRequest){
+    public ResponseEntity<ApiResponse<UserDTO>> register(@RequestBody @Valid AppUserRequest appUserRequest){
         return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.<AppUser>builder()
+                ApiResponse.<UserDTO>builder()
                         .success(true)
                         .message("Register user successfully")
-                        .payload(null)
+                        .httpStatus(HttpStatus.OK)
                         .payload(appUserService.register(appUserRequest))
                         .timestamp(LocalDateTime.now())
                         .build()

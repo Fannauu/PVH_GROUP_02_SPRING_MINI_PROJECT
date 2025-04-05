@@ -1,5 +1,4 @@
 package org.example.miniprojectspring.configuration;
-import lombok.AllArgsConstructor;
 import org.example.miniprojectspring.jwt.JwtAuthEntryPoint;
 import org.example.miniprojectspring.jwt.JwtAuthFilter;
 import org.example.miniprojectspring.service.AppUserSevice;
