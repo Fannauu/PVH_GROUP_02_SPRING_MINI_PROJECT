@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@Builder
+@Builder
 public class HabitLogRequest {
+    private Integer id;
 }
