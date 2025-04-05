@@ -6,8 +6,6 @@ import lombok.SneakyThrows;
 import org.example.miniprojectspring.model.dto.response.ApiResponse;
 import org.example.miniprojectspring.model.entity.FileMetadata;
 import org.example.miniprojectspring.service.FileService;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +38,7 @@ public class FileController {
     public ResponseEntity<?> getFileByFileName(@PathVariable("file-name") String fileName){
         InputStream inputStream= fileService.getFileByFileName(fileName);
         return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .contentType(MediaType.IMAGE_PNG)
                 .body(inputStream.readAllBytes());
     }
 
