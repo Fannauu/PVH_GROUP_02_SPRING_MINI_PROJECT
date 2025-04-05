@@ -14,8 +14,9 @@ import java.util.UUID;
 @NoArgsConstructor
 //@Builder
 public class HabitLog {
-    private UUID id;
-    private LocalDateTime dateTime;
+    private UUID habitLogId;
+    private LocalDateTime logDate;
     private Status status;
     private Integer xpEarned;
+    private Habit habit;
 }
