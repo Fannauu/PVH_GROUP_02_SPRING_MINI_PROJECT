@@ -2,6 +2,7 @@ package org.example.miniprojectspring.model.entity;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,8 +12,8 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@Builder
-public class Profile {
+@Builder
+public class AppUser {
     private UUID id;
     private String name;
     private String email;
