@@ -46,3 +46,16 @@ CREATE TABLE habit_logs (
                             status VARCHAR(255),
                             xp_earned INTEGER
 );
+
+
+INSERT INTO habits(title,description,frequency)
+VALUES ('dedsds','hjhkkh','iuhjj')
+RETURNING*;
+
+
+    SELECT a.attendee_id, a.attendee_name, a.email
+    FROM attendee a
+    INNER JOIN event_attendee ea ON a.attendee_id = ea.attendee_id
+    WHERE ea.event_id = #{eventId}
+
+

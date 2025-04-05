@@ -2,6 +2,7 @@ package org.example.miniprojectspring.model.entity;
 
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@Builder
+@Builder
 public class Habit {
     private UUID id;
     private String title;
@@ -19,4 +20,5 @@ public class Habit {
     private String frequency;
     private Boolean isActive;
     private LocalDateTime createAt;
+    private Profile profile;
 }
