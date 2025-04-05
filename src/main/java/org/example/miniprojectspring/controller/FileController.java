@@ -40,7 +40,7 @@ public class FileController {
     public ResponseEntity<?> getFileByFileName(@PathVariable("file-name") String fileName){
         InputStream inputStream= fileService.getFileByFileName(fileName);
         return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.IMAGE_PNG)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(inputStream.readAllBytes());
     }
 
