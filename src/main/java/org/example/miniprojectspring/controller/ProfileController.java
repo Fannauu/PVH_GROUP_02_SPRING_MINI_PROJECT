@@ -13,51 +13,51 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/v1/profiles")
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class ProfileController {
 
-    @Operation(summary = "Get user profile")
-    @GetMapping
-    public ResponseEntity<ApiResponse<Profile>> getProfile() {
-        return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.<Profile>builder()
-                        .success(true)
-                        .message("Get user profile successfully")
-                        .payload(null)
-                        .httpStatus(HttpStatus.OK)
-                        .timestamp(LocalDateTime.now())
-                        .build()
-        );
-    }
-
-    @Operation(summary = "Update user profile")
-    @PutMapping
-    public ResponseEntity<ApiResponse<Profile>> updateProfile() {
-        return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.<Profile>builder()
-                        .success(true)
-                        .message("Updated user profile successfully")
-                        .payload(null)
-                        .httpStatus(HttpStatus.OK)
-                        .timestamp(LocalDateTime.now())
-                        .build()
-        );
-    }
-
-
-    @Operation(summary = "Delete user profile")
-    @DeleteMapping
-    public ResponseEntity<ApiResponse<Profile>> deleteProfile() {
-        return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.<Profile>builder()
-                        .success(true)
-                        .message("Updated user profile successfully")
-                        .payload(null)
-                        .httpStatus(HttpStatus.OK)
-                        .timestamp(LocalDateTime.now())
-                        .build()
-        );
-    }
+//    @Operation(summary = "Get user profile")
+//    @GetMapping
+//    public ResponseEntity<ApiResponse<Profile>> getProfile() {
+//        return ResponseEntity.status(HttpStatus.OK).body(
+//                ApiResponse.<Profile>builder()
+//                        .success(true)
+//                        .message("Get user profile successfully")
+//                        .payload(null)
+//                        .httpStatus(HttpStatus.OK)
+//                        .timestamp(LocalDateTime.now())
+//                        .build()
+//        );
+//    }
+//
+//    @Operation(summary = "Update user profile")
+//    @PutMapping
+//    public ResponseEntity<ApiResponse<Profile>> updateProfile() {
+//        return ResponseEntity.status(HttpStatus.OK).body(
+//                ApiResponse.<Profile>builder()
+//                        .success(true)
+//                        .message("Updated user profile successfully")
+//                        .payload(null)
+//                        .httpStatus(HttpStatus.OK)
+//                        .timestamp(LocalDateTime.now())
+//                        .build()
+//        );
+//    }
+//
+//
+//    @Operation(summary = "Delete user profile")
+//    @DeleteMapping
+//    public ResponseEntity<ApiResponse<Profile>> deleteProfile() {
+//        return ResponseEntity.status(HttpStatus.OK).body(
+//                ApiResponse.<Profile>builder()
+//                        .success(true)
+//                        .message("Updated user profile successfully")
+//                        .payload(null)
+//                        .httpStatus(HttpStatus.OK)
+//                        .timestamp(LocalDateTime.now())
+//                        .build()
+//        );
+//    }
 
 
 }
