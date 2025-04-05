@@ -1,8 +1,6 @@
 package org.example.miniprojectspring.configuration;
-import lombok.AllArgsConstructor;
 import org.example.miniprojectspring.jwt.JwtAuthEntryPoint;
 import org.example.miniprojectspring.jwt.JwtAuthFilter;
-
 import org.example.miniprojectspring.service.AppUserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,13 +21,13 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 public class SecurityConfig {
 
-    private final AppUserService userService;
+    private final AppUserService appUserService;
     private final JwtAuthFilter jwtAuthFilter;
     private final JwtAuthEntryPoint jwtAuthEntrypoint;
     private final PasswordEncoder passwordEncoder;
 
-    public SecurityConfig(AppUserService userService, JwtAuthFilter jwtAuthFilter, JwtAuthEntryPoint jwtAuthEntrypoint, PasswordEncoder passwordEncoder) {
-        this.userService = userService;
+    public SecurityConfig(AppUserService appUserService, JwtAuthFilter jwtAuthFilter, JwtAuthEntryPoint jwtAuthEntrypoint, PasswordEncoder passwordEncoder) {
+        this.appUserService = appUserService;
         this.jwtAuthFilter = jwtAuthFilter;
         this.jwtAuthEntrypoint = jwtAuthEntrypoint;
         this.passwordEncoder = passwordEncoder;
@@ -42,7 +40,7 @@ public class SecurityConfig {
     @Bean
     AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider   provider= new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userService);
+        provider.setUserDetailsService(appUserService);
         provider.setPasswordEncoder(passwordEncoder);
         return  provider;
     }
