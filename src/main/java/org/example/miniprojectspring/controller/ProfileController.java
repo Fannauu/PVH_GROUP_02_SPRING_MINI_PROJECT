@@ -2,6 +2,7 @@ package org.example.miniprojectspring.controller;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.example.miniprojectspring.model.dto.response.ApiResponse;
 import org.example.miniprojectspring.model.entity.Profile;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @RestController
 @RequestMapping("/api/v1/profiles")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class ProfileController {
 
     @Operation(summary = "Get user profile")

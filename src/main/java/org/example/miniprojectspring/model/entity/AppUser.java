@@ -6,26 +6,45 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppUser implements  UserDetails{
-
-    private int id;
-    private String username;
+//@Builder
+public class AppUser implements UserDetails {
+    private UUID id;
+    private String name;
     private String email;
     private String password;
-    private String profileImageUrl;
-
+    private Integer level;
+    private Integer xpLevel;
+    private String profileImage;
+    private Boolean isVerified;
+    private LocalDateTime createdAt;
+    //    public void setPassword(String rawPassword) {
+    //        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    //        this.password = encoder.encode(rawPassword);
+    //    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(email));
+        return authorities;
     }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
     @Override
     public String getUsername() {
         return email;
