@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 //@Builder
 public class ProfileRequest {
+    private String title;
 }

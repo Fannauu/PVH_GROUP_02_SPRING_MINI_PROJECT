@@ -1,15 +1,13 @@
 package org.example.miniprojectspring.model.dto.request;
 
-
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@Builder
-public class HabitLogRequest {
-    private String title;
+public class VerifyRequest {
+    private String email;
+    private String otp;
 }

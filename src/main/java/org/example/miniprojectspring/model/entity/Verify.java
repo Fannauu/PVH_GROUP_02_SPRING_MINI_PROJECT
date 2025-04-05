@@ -1,6 +1,5 @@
 package org.example.miniprojectspring.model.entity;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@Builder
-public class File {
-    private String fileName;
+public class Verify {
+    private String email;
+    private String otp;
 }
