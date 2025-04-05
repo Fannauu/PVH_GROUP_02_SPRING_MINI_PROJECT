@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 //@Builder
 public class Achievement {
     private int id;
-    private String achieveName;
     private String title;
     private String description;
     private String badge;

@@ -33,19 +33,18 @@ public class AchievementController {
         );
     }
 
-
-    @Operation(summary = "Get achievements by App User ID" )
-    @GetMapping
-    public ResponseEntity<ApiResponse<Achievement>> getAchievementByAppUserId(){
-        return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.<Achievement>builder()
-                        .success(true)
-                        .message("Get achievements by app user id successfully")
-                        .payload(null)
-                        .httpStatus(HttpStatus.OK)
-                        .timestamp(LocalDateTime.now())
-                        .build()
-        );
-    }
+//    @Operation(summary = "Get achievements by App User ID" )
+//    @GetMapping
+//    public ResponseEntity<ApiResponse<Achievement>> getAchievementByAppUserId(){
+//        return ResponseEntity.status(HttpStatus.OK).body(
+//                ApiResponse.<Achievement>builder()
+//                        .success(true)
+//                        .message("Get achievements by app user id successfully")
+//                        .payload(null)
+//                        .httpStatus(HttpStatus.OK)
+//                        .timestamp(LocalDateTime.now())
+//                        .build()
+//        );
+//    }
 
 }
