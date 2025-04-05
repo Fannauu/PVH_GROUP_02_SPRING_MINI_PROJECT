@@ -7,6 +7,7 @@ import org.example.miniprojectspring.model.dto.request.AppUserRequest;
 import org.example.miniprojectspring.model.entity.AppUser;
 
 import java.util.List;
+import java.util.UUID;
 
 @Mapper
 public interface AppUserRepository {
@@ -33,4 +34,8 @@ public interface AppUserRepository {
     }
     )
     AppUser register(@Param("request") AppUserRequest appUserRequest);
+
+
+
+
 }

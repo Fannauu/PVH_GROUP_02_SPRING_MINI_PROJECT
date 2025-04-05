@@ -28,10 +28,6 @@ public class AppUser implements UserDetails {
     private String profileImage;
     private Boolean isVerified;
     private LocalDateTime createdAt;
-    //    public void setPassword(String rawPassword) {
-    //        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-    //        this.password = encoder.encode(rawPassword);
-    //    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
