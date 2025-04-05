@@ -1,13 +1,10 @@
 package org.example.miniprojectspring.controller;
 
-
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.example.miniprojectspring.model.dto.response.ApiResponse;
 import org.example.miniprojectspring.model.entity.FileMetadata;
 import org.example.miniprojectspring.service.FileService;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
