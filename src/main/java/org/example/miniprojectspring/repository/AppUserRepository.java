@@ -9,7 +9,7 @@ import org.example.miniprojectspring.model.entity.AppUser;
 import java.util.List;
 
 @Mapper
-public interface AppUserReository {
+public interface AppUserRepository {
     @Select("""
          SELECT * FROM app_users
          WHERE email= #{email}

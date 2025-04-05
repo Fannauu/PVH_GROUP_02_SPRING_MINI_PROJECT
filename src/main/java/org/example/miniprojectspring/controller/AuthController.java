@@ -9,7 +9,7 @@ import org.example.miniprojectspring.model.dto.request.AuthRequest;
 import org.example.miniprojectspring.model.dto.response.ApiResponse;
 import org.example.miniprojectspring.model.dto.response.AuthResponse;
 import org.example.miniprojectspring.model.entity.AppUser;
-import org.example.miniprojectspring.service.AppUserSevice;
+import org.example.miniprojectspring.service.AppUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,7 +29,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AppUserSevice appUserService;
+    private final AppUserService appUserService;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
@@ -68,46 +68,6 @@ public class AuthController {
         AuthResponse authResponse = new AuthResponse(token);
         return ResponseEntity.ok(authResponse);
     }
-
-//    @Operation(summary = "Register a new user")
-//    @PostMapping("/register")
-//    public ResponseEntity<ApiResponse<Auth>> register(){
-//        return ResponseEntity.status(HttpStatus.OK).body(
-//                ApiResponse.<Auth>builder()
-//                        .success(true)
-//                        .message("Register user successfully")
-//                        .payload(null)
-//                        .timestamp(LocalDateTime.now())
-//                        .build()
-//        );
-//    }
-//
-//    @Operation(summary = "Verify email with OTP")
-//    @PostMapping("/verify")
-//    public ResponseEntity<ApiResponse<Auth>> verify(){
-//        return ResponseEntity.status(HttpStatus.OK).body(
-//                ApiResponse.<Auth>builder()
-//                        .success(true)
-//                        .message("Verify user OTP successfully")
-//                        .payload(null)
-//                        .timestamp(LocalDateTime.now())
-//                        .build()
-//        );
-//    }
-//
-//    @Operation(summary = "Resend verification OTP")
-//    @PostMapping("/verify")
-//    public ResponseEntity<ApiResponse<Auth>> resendVerification(){
-//        return ResponseEntity.status(HttpStatus.OK).body(
-//                ApiResponse.<Auth>builder()
-//                        .success(true)
-//                        .message("Resend OTP successfully")
-//                        .payload(null)
-//                        .timestamp(LocalDateTime.now())
-//                        .build()
-//        );
-//    }
-
 
 
 }
