@@ -1,6 +1,5 @@
 package org.example.miniprojectspring.service.impl;
 
-
 import io.minio.*;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -64,6 +63,5 @@ public class FileServiceImpl implements FileService {
                         .object(fileName)
                         .build()
         );
-
     }
 }

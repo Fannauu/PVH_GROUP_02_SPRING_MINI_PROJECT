@@ -8,11 +8,12 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+
 @OpenAPIDefinition(
         info = @Info(
                 title = "Gamified Habit Tracker API",
                 version = "1.0",
-                description = "API documentation for the Gamified Habit Tracker application\n"
+                description = "API documentation for the Gamified Habit Tracker application"
         )
 )
 
@@ -22,7 +23,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         scheme = "bearer",
         in = SecuritySchemeIn.HEADER
 )
-
 
 @SpringBootApplication
 public class MiniProjectSpringApplication {

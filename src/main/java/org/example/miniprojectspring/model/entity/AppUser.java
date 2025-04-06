@@ -1,12 +1,14 @@
 package org.example.miniprojectspring.model.entity;
 
-
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.miniprojectspring.model.dto.response.UserDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@Builder
+@Builder
 public class AppUser implements UserDetails {
     private UUID id;
     private String name;
@@ -28,10 +30,14 @@ public class AppUser implements UserDetails {
     private String profileImage;
     private Boolean isVerified;
     private LocalDateTime createdAt;
-    //    public void setPassword(String rawPassword) {
-    //        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-    //        this.password = encoder.encode(rawPassword);
-    //    }
+
+    public UserDTO toDto(AppUser userApp){
+        if (userApp == null){
+            return null;
+        }
+        return new UserDTO(id, name, email, level, xpLevel, profileImage, isVerified, createdAt);
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -69,4 +75,11 @@ public class AppUser implements UserDetails {
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
     }
+
+//    public UserDTO toDto(AppUser appUser){
+//        if (appUser == null){
+//            return null;
+//        }
+//        return UserDTO(appUser.ge);
+//    }
 }
