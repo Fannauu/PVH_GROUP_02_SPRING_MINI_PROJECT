@@ -24,28 +24,26 @@ public class AppUserImpl implements AppUserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        AppUser user = appUserRepository.getUserByEmail(email); // Or your method to fetch user by email
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+     // Should print true if user is verified
 
-//    @Override
-//    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-//        AppUser user = appUserRepository.getUserByEmail(email); // Or your method to fetch user by email
-//        if (user == null) {
-//            throw new UsernameNotFoundException("User not found");
-//        }
-//        authRepository.save(user);
-//
-//     // Should print true if user is verified
-//
-//        return user;
-////        return appUserRepository.getUserByEmail(email);
-//    }
+        return user;
+//        return appUserRepository.getUserByEmail(email);
+    }
 
-//    public UserDTO getAuthenticatedUser() {
-//        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-////        System.out.println(authentication.getName());
-//        AppUser appUser = appUserRepository.getUserBYEmail(authentication.getName());
-//        UserDTO userDTO = appUser.toDto(appUser);
-//        return userDTO;
-//    }
+    public UserDTO getAuthenticatedUser() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(authentication.getName());
+        AppUser appUser = appUserRepository.getUserBYEmail(authentication.getName());
+        System.out.println("AppUser: " + appUser);
+        UserDTO userDTO = appUser.toDto(appUser);
+        return userDTO;
+    }
 
     @Override
     public UserDTO updateNameAndImgOfUser(ProfileRequest profileRequest) {
@@ -85,13 +83,13 @@ public class AppUserImpl implements AppUserService {
         return userDTO;
     }
 
-    @Override
-    public UserDTO getAuthenticatedUser() {
-        return null;
-    }
+//    @Override
+//    public UserDTO getAuthenticatedUser() {
+//        return ;
+//    }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
-    }
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        return null;
+//    }
 }
