@@ -6,7 +6,6 @@ import org.example.miniprojectspring.exception.UUIDTypeHandler;
 import org.example.miniprojectspring.model.dto.request.AppUserRequest;
 import org.example.miniprojectspring.model.entity.AppUser;
 
-import java.util.List;
 
 @Mapper
 public interface AppUserRepository {
