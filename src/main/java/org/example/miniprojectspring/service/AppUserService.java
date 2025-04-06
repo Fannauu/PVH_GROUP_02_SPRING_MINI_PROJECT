@@ -14,4 +14,9 @@ public interface AppUserService extends UserDetailsService {
     UserDTO updateNameAndImgOfUser(ProfileRequest profileRequest);
 
     UserDTO deleteCurrentUser();
+
+    AppUser getUserByEmail(String email);
+
+    
+    void save(AppUser user);
 }

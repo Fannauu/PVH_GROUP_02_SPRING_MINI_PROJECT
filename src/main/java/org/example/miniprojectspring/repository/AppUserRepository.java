@@ -5,7 +5,9 @@ import org.apache.ibatis.annotations.*;
 import org.example.miniprojectspring.UUIDHandler.UUIDTypeHandler;
 import org.example.miniprojectspring.model.dto.request.AppUserRequest;
 import org.example.miniprojectspring.model.dto.request.ProfileRequest;
+import org.example.miniprojectspring.model.dto.response.UserDTO;
 import org.example.miniprojectspring.model.entity.AppUser;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 import java.util.UUID;
@@ -66,6 +68,21 @@ public interface AppUserRepository {
             """)
     @ResultMap("appUserMapper")
     AppUser deleteCurrentUser(String email);
+
+
+    @Select("""
+        Select * from app_users where email = #{email}
+    """)
+    @ResultMap("appUserMapper")
+    AppUser getUserByEmail(String email);
+
+
+
+    @Select("""
+        UPDATE app_users set is_verified = #{request.isVerified}
+        WHERE email= #{request.email}
+    """)
+    void save(@Param("request") AppUser appUser);
 
 //    @Select("""
 //     SELECT * FROM app_users
