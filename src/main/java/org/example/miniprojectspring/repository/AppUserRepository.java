@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.*;
 import org.example.miniprojectspring.UUIDHandler.UUIDTypeHandler;
 import org.example.miniprojectspring.model.dto.request.AppUserRequest;
 import org.example.miniprojectspring.model.dto.request.ProfileRequest;
+import org.example.miniprojectspring.model.dto.response.UserDTO;
 import org.example.miniprojectspring.model.entity.AppUser;
 
 import java.util.UUID;
@@ -12,27 +13,23 @@ import java.util.UUID;
 @Mapper
 public interface AppUserRepository {
 
+
+
     @Select("""
      INSERT INTO app_users (username, email, password, profile_image)
      VALUES (#{request.username}, #{request.email}, #{request.password}, #{request.profileImage})
      RETURNING *
  """)
     @Results(id = "appUserMapper", value = {
-            @Result(property = "id", column = "app_user_id", typeHandler = UUIDTypeHandler.class),
             @Result(property = "name", column = "username"),
             @Result(property = "profileImage", column = "profile_image"),
+            @Result(property = "id", column = "app_user_id"),
             @Result(property = "xpLevel", column = "xp"),
             @Result(property = "isVerified", column = "is_verified"),
             @Result(property = "createdAt", column = "created_at")
     }
     )
     AppUser register(@Param("request") AppUserRequest appUserRequest);
-
-
-    @Select("""
-    SELECT * FROM app_users WHERE app_user_id = #{id}
-    """)
-    AppUser getById(UUID id);
 
 
     @Select("""
@@ -43,9 +40,8 @@ public interface AppUserRepository {
     AppUser getUserBYEmail(String email);
 
 
-
     @Select("""
-            UPDATE app_users 
+            UPDATE app_users
             SET username = #{request.name}, profile_image = #{request.profileImage}
             WHERE email= #{email}
             RETURNING *
@@ -62,22 +58,23 @@ public interface AppUserRepository {
 
 
     @Select("""
-        Select * from app_users where email = #{email}
+        SELECT * FROM app_users WHERE app_user_id = #{id}
     """)
-    @ResultMap("appUserMapper")
-    AppUser getUserByEmail(String email);
-
+    @Results(id = "userDTOMapper", value = {
+            @Result(property = "id", column = "app_user_id"),
+            @Result(property = "name", column = "username"),
+            @Result(property = "profileImage", column = "profile_image"),
+            @Result(property = "xpLevel", column = "xp"),
+            @Result(property = "isVerified", column = "is_verified"),
+            @Result(property = "createdAt", column = "created_at"),
+    })
+    UserDTO getCurrentUserById(UUID id);
 
 
     @Select("""
         UPDATE app_users set is_verified = #{request.isVerified}
-        WHERE email= #{request.email}
-    """)
+        WHERE email = #{request.email}
+""")
     void save(@Param("request") AppUser appUser);
 
-//    @Select("""
-//     SELECT * FROM app_users
-//     WHERE email
-// """)
-//    AppUser getCurrentUser();
 }

@@ -11,20 +11,34 @@ import java.util.UUID;
 @Mapper
 public interface AchievementRepository {
     @Select("""
-        select * from achievements
+        select * from achievements 
+        OFFSET #{page} * (#{size} - 1)
+        LIMIT #{page}
     """)
-    @Results(id = "achievementMapper" , value = {
-            @Result(property = "id",column = "achievement_id",typeHandler = UUIDTypeHandler.class),
-            @Result(property = "xpRequired",column = "xp_required")
+    @Results(id = "achievementMapper", value = {
+            @Result(property = "id", column = "achievement_id"),
+            @Result(property = "xpRequired", column = "xp_required"),
+            @Result(property = "title", column = "title"),
+            @Result(property = "description", column = "description"),
+            @Result(property = "badge", column = "badge")
     })
-    List<Achievement> getAchievements();
+    List<Achievement> getAchievements(@Param("size") Integer size,@Param("page") Integer page);
 
 
     @Select("""
-                select * from achievements
-                offset #{size} * (#{page} -1)
-                limit #{size}
-            """)
+    SELECT a.* 
+    FROM app_user_achievements aua
+    JOIN achievements a ON a.achievement_id = aua.achievement_id
+    WHERE aua.app_user_id = #{userId}
+    
+""")
     @ResultMap("achievementMapper")
-    Achievement getByUserId(UUID userId, int size, int page);
+    List<Achievement> getAchievementByAppUserId(
+            @Param("userId") UUID userId,
+            @Param("size") Integer size,
+            @Param("page") Integer page
+    );
+
+
+
 }

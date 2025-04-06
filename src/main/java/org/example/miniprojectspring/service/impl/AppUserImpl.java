@@ -26,7 +26,7 @@ public class AppUserImpl implements AppUserService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        AppUser user = appUserRepository.getUserByEmail(email); // Or your method to fetch user by email
+        AppUser user = appUserRepository.getUserBYEmail(email); // Or your method to fetch user by email
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
@@ -67,7 +67,7 @@ public class AppUserImpl implements AppUserService {
 
     @Override
     public AppUser getUserByEmail(String email) {
-        return appUserRepository.getUserByEmail(email);
+        return appUserRepository.getUserBYEmail(email);
     }
 
     @Override
