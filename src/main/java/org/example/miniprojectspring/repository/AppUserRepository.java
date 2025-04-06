@@ -28,7 +28,12 @@ public interface AppUserRepository {
      RETURNING *
  """)
     @Results(id = "appUserMapper", value = {
+            @Result(property = "id", column = "app_user_id"),
+            @Result(property = "name", column = "username"),
+            @Result(property = "xpLevel",column = "xp"),
             @Result(property = "profileImage", column = "profile_image"),
+            @Result(property = "isVerified",column = "is_verified"),
+            @Result(property = "createdAt",column = "created_at"),
             @Result(property = "id", column = "app_user_id", typeHandler = UUIDTypeHandler.class)
     }
     )

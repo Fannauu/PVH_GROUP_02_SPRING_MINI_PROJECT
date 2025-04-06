@@ -26,7 +26,6 @@ public class AppUserImpl implements AppUserService {
         return appUserRepository.getUserBYEmail(email);
     }
 
-
     @Override
     public AppUser register(AppUserRequest request) {
         request.setPassword(passwordEncoder.encode(request.getPassword()));
