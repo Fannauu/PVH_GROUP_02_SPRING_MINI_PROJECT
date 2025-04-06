@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 
 public class AppUserRequest {
-    @NotBlank(message = "Username cannot be Null!")
+    @NotBlank(message = "Username cannot be Blank!")
     @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters")
     private String username;
     @NotBlank(message = "Email cannot be empty")

@@ -3,6 +3,7 @@ package org.example.miniprojectspring.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.miniprojectspring.exception.NotFoundException;
 import org.example.miniprojectspring.model.dto.request.ProfileRequest;
@@ -40,7 +41,7 @@ public class ProfileController {
 
     @Operation(summary = "Update user profile")
     @PutMapping
-    public ResponseEntity<ApiResponse<UserDTO>> updateCurrentUser(@RequestBody ProfileRequest profileRequest) {
+    public ResponseEntity<ApiResponse<UserDTO>> updateCurrentUser(@RequestBody @Valid ProfileRequest profileRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.<UserDTO>builder()
                         .success(true)
@@ -51,7 +52,6 @@ public class ProfileController {
                         .build()
 
         );
-
     }
 
 

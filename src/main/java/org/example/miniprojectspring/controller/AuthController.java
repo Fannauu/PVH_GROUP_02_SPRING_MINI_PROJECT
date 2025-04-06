@@ -53,7 +53,7 @@ public class AuthController {
                 ApiResponse.<UserDTO>builder()
                         .success(true)
                         .message("Register user successfully")
-                        .httpStatus(HttpStatus.OK)
+                        .httpStatus(HttpStatus.CREATED)
                         .payload(appUserService.register(appUserRequest))
                         .timestamp(LocalDateTime.now())
                         .build()
