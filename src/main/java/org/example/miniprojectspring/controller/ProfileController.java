@@ -5,27 +5,34 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.example.miniprojectspring.model.dto.response.ApiResponse;
+import org.example.miniprojectspring.model.entity.AppUser;
 import org.example.miniprojectspring.model.entity.Profile;
+import org.example.miniprojectspring.service.ProfileService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/profiles")
-@RequiredArgsConstructor
 @SecurityRequirement(name = "bearerAuth")
 public class ProfileController {
+    private final ProfileService profileService;
+
+    public ProfileController(ProfileService profileService) {
+        this.profileService = profileService;
+    }
 
     @Operation(summary = "Get user profile")
     @GetMapping
-    public ResponseEntity<ApiResponse<Profile>> getProfile() {
+    public ResponseEntity<ApiResponse<AppUser>> getProfile() {
         return ResponseEntity.status(HttpStatus.OK).body(
-                ApiResponse.<Profile>builder()
+                ApiResponse.<AppUser>builder()
                         .success(true)
-                        .message("Get user profile successfully")
-                        .payload(null)
+                        .message("User profile fetch successfully")
+                        .payload(profileService.getAllUsers())
                         .httpStatus(HttpStatus.OK)
                         .timestamp(LocalDateTime.now())
                         .build()

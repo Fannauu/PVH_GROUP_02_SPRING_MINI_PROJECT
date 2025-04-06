@@ -16,7 +16,8 @@ public interface AuthRepository {
 
     @Results(id = "appUserMapper", value = {
             @Result(property = "profileImageUrl", column = "profile_image"),
-            @Result(property = "appUserId", column = "app_user_id", typeHandler = UUIDTypeHandler.class)
+            @Result(property = "appUserId", column = "app_user_id", typeHandler = UUIDTypeHandler.class),
+            @Result(property = "isVerified", column = "is_verified")
     }
     )
     AppUser register(@Param("request") @RequestBody AppUserRequest appUserRequest);
@@ -29,10 +30,18 @@ public interface AuthRepository {
     @ResultMap("appUserMapper")
     AppUser getUserByEmail(String email);
 
+//    @Update("""
+//    UPDATE app_users SET is_verified = #{request.isVerified}
+//    WHERE email = #{email}
+//""")
+//    void save(@Param(("request")) AppUser appUser, String email);
+
     @Update("""
-    UPDATE app_users SET is_verified = #{request.isVerified}
-    WHERE email = #{email}
+    UPDATE app_users
+    SET is_verified = #{request.isVerified}
+    WHERE email = #{request.email}
 """)
-    void save(@Param(("request")) AppUser appUser, String email);
+    void save(@Param("request") AppUser appUser);
+
 }
 

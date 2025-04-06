@@ -28,11 +28,17 @@ public class AppUser implements UserDetails{
     private boolean isVerified;
     private LocalDateTime createdAt;
 
-    @Override
-    public boolean isEnabled() {
-        System.out.println("User enabled status: " + isVerified);
-        return isVerified;
-    }
+//    @Override
+//    public boolean isEnabled() {
+//        System.out.println("User enabled status: " + isVerified);
+//        return isVerified;
+//    }
+@Override
+public boolean isEnabled() {
+    System.out.println("User enabled status (isVerified): " + isVerified);
+    return true;  // This should return true if isVerified is true
+}
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

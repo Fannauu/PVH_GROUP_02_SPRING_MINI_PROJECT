@@ -68,60 +68,99 @@ public class AuthController {
 
 
     //Verify Controller
+//    @PostMapping("/verify-otp")
+//    public ResponseEntity<String> verifyOtp(@RequestParam String email, @RequestParam String otp) throws Exception {
+//        OtpEntry entry = otpService.getOtpEntry(email);
+//        if (entry == null){
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                    .body("OTP NOT FOUND");
+//        }
+//
+//
+//        // Check if OTP expired
+//        if (LocalDateTime.now().isAfter(entry.getExpiryTime())){
+//            otpService.clearOtp(email); // Optional clear expired OTP
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                    .body("OTP EXPIRED, Please resend email to get a new OTP");
+//        }
+//
+//        //Validate OTP value
+//        if (!entry.getOtp().equals(otp)){
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                    .body("Invalid OTP, please try again");
+//        }
+//
+//        //OTP is valid and not expired, update user verification
+//        AppUser user = appUserService.getUserByEmail(email);
+//        if (user == null){
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                    .body("USER NOT FOUND");
+//
+//        }
+//        user.setVerified(true);
+//        appUserService.save(user,email);
+//        otpService.clearOtp(email);
+//        System.out.println();
+//      return ResponseEntity.ok("OTP verified successfully.");
+//    }
+
+
     @PostMapping("/verify-otp")
     public ResponseEntity<String> verifyOtp(@RequestParam String email, @RequestParam String otp) throws Exception {
         OtpEntry entry = otpService.getOtpEntry(email);
-        if (entry == null){
+        if (entry == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("OTP NOT FOUND");
         }
 
-
         // Check if OTP expired
-        if (LocalDateTime.now().isAfter(entry.getExpiryTime())){
+        if (LocalDateTime.now().isAfter(entry.getExpiryTime())) {
             otpService.clearOtp(email); // Optional clear expired OTP
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("OTP EXPIRED, Please resend email to get a new OTP");
         }
 
-        //Validate OTP value
-        if (!entry.getOtp().equals(otp)){
+        // Validate OTP value
+        if (!entry.getOtp().equals(otp)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Invalid OTP, please try again");
         }
 
-        //OTP is valid and not expired, update user verification
+        // OTP is valid, proceed with verification
         AppUser user = appUserService.getUserByEmail(email);
-        if (user == null){
+        if (user == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("USER NOT FOUND");
-
         }
-        user.setVerified(true);
-        appUserService.save(user,email);
+        System.out.println(user.toString());
+
+        // Set user as verified
+        user.setVerified(true);  //
+        appUserService.save(user);  //
+
+        // Clear OTP after successful verification
         otpService.clearOtp(email);
-        System.out.println();
-      return ResponseEntity.ok("OTP verified successfully.");
+
+        return ResponseEntity.ok("OTP verified successfully.");
     }
+
+
 
 
 
     @Operation(summary = "User Login")
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(@RequestBody AppUserLoginRequest appUserLoginRequest) throws Exception {
-        // Load user
-        UserDetails userDetails = appUserService.loadUserByUsername(appUserLoginRequest.getIdentifier());
-        System.out.println(appUserLoginRequest.getIdentifier());
-        if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("User not found with email: " + appUserLoginRequest.getIdentifier());
-        }
-        if (!userDetails.isEnabled()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body("Account not verified. Please verify your email before logging in.");
-        }
         // Authenticate password
         authenticate(appUserLoginRequest.getIdentifier(), appUserLoginRequest.getPassword());
+        // Load user
+        final AppUser userDetails = appUserService.getUserByEmail(appUserLoginRequest.getIdentifier());
+        AppUser user = appUserService.getUserByEmail(appUserLoginRequest.getIdentifier());
+        System.out.println("user2"+appUserLoginRequest.getIdentifier());
+        if (!user.isVerified()) {
+            System.out.println("user nulll");
+            return null;
+        }
 
         // Generate token
         final String token = jwtService.generateToken(userDetails);

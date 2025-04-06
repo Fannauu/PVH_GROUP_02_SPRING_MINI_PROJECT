@@ -8,6 +8,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 
 @Service
 public class AppUserImpl implements AppUserService {
@@ -21,10 +24,34 @@ public class AppUserImpl implements AppUserService {
     }
 
 
+//    @Override
+//    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+//        AppUser user =  authRepository.getUserByEmail(email);
+//        System.out.println("User verified: " + user.isVerified());  // Debugging line
+//
+//        return new org.springframework.security.core.userdetails.User(
+//                user.getEmail(),
+//                user.getPassword(),
+//                user.isEnabled(),  // This should be based on isVerified, which will be true after email verification
+//                true, true, true,   // Always non-expired and non-locked
+//                new ArrayList<>()
+//        );
+//    }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return authRepository.getUserByEmail(email);
+        AppUser user = authRepository.getUserByEmail(email); // Or your method to fetch user by email
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        authRepository.save(user);
+
+     // Should print true if user is verified
+
+        return user;
+
     }
+
 
 
     @Override
@@ -39,10 +66,9 @@ public class AppUserImpl implements AppUserService {
         return authRepository.getUserByEmail(email);
     }
 
-    @Override
-    public void save(AppUser user, String email) {
-      //  user.setPassword(passwordEncoder.encode(password));
-        authRepository.save(user, email);
 
+    @Override
+    public void save(AppUser user) {
+         authRepository.save(user); // make sure this persists to DB
     }
 }
