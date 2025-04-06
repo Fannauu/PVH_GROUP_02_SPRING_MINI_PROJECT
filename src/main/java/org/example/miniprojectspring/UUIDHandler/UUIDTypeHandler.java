@@ -2,10 +2,14 @@ package org.example.miniprojectspring.UUIDHandler;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.MappedTypes;
+import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.util.UUID;
 
+@MappedTypes(UUID.class)
+@Component
 public class UUIDTypeHandler extends BaseTypeHandler<UUID> {
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, UUID parameter, JdbcType jdbcType) throws SQLException {

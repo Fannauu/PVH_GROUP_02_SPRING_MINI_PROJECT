@@ -4,7 +4,6 @@ package org.example.miniprojectspring.repository;
 import org.apache.ibatis.annotations.*;
 import org.example.miniprojectspring.UUIDHandler.UUIDTypeHandler;
 import org.example.miniprojectspring.model.dto.request.HabitRequest;
-import org.example.miniprojectspring.model.entity.AppUser;
 import org.example.miniprojectspring.model.entity.Habit;
 
 import java.util.List;
@@ -13,28 +12,47 @@ import java.util.UUID;
 @Mapper
 public interface HabitRepository {
     @Select("""
-        SELECT * FROM habits
+        SELECT h.habit_id, h.title, h.description, h.frequency, h.is_active, h.app_user_id
+        FROM habits h
+    
     """)
     @Results(id="habitMapper", value = {
-            @Result(property = "name", column = "username"),
-            @Result(property = "profileImage", column = "profile_image"),
-            @Result(property = "xpLevel", column = "xp"),
-            @Result(property = "id",column = "habit_id",typeHandler = UUIDTypeHandler.class),
-            @Result(property = "isActive",column = "is_active"),
-            @Result(property = "createAt",column = "created_at"),
-            @Result(property = "appUser",column = "email",
-                    one = @One(select = "org.example.miniprojectspring.repository.AppUserRepository.getUserBYEmail")
-            )
+            @Result(property = "id", column = "habit_id", typeHandler = UUIDTypeHandler.class),
+            @Result(property = "title", column = "title"),
+            @Result(property = "description", column = "description"),
+            @Result(property = "isActive", column = "is_active"),
+            @Result(property = "createdAt", column = "created_at"),
+            @Result(property = "appUser", column = "app_user_id",
+                    one = @One(select = "org.example.miniprojectspring.repository.AppUserRepository.getCurrentUserById"))
     })
-    List<Habit> getAllHabits(String email);
+    List<Habit> getAllHabits();
+
+    @Select("""
+        SELECT h.habit_id, h.title, h.description, h.frequency, h.is_active, h.app_user_id
+        FROM habits h WHERE h.habit_id = #{id}
+    """)
+    @ResultMap("habitMapper")
+    Habit getHabitById(UUID id);
+
+    @Select("""
+        INSERT INTO habits(title, description, frequency, app_user_id) VALUES (#{request.title}, #{request.description}, #{request.frequency}, 
+                                                                               (SELECT app_user_id FROM app_users WHERE email = #{email}))
+        RETURNING *
+    """)
+    @ResultMap("habitMapper")
+    @Result(property = "email", column = "email")
+    Habit postHabits(@Param("request") HabitRequest habitRequest, String email);
 
 
+    @Select("""
+        UPDATE habits SET title = #{request.title}, description = #{request.description} , frequency = #{request.frequency} WHERE habit_id = #{id} RETURNING *
+    """)
+    @ResultMap("habitMapper")
+    Habit updateHabitById(UUID id, @Param("request") HabitRequest habitRequest);
 
-//    @Select("""
-//            SELECT * FROM app_users where email = #{email}
-//            """)
-////    @Result(property = "",column = "app_user_id",typeHandler = UUIDTypeHandler.class)
-//    AppUser getUserByUserId(String email);
-
-    Habit postHabits(HabitRequest habitRequest);
+    @Select("""
+            DELETE FROM habits WHERE habit_id = #{id} RETURNING *
+            """)
+    @ResultMap("habitMapper")
+    Habit deleteHabitById(UUID id);
 }

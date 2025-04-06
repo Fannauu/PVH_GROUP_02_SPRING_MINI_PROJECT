@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.miniprojectspring.model.dto.response.UserDTO;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -19,8 +20,7 @@ public class Habit {
     private String description;
     private enum frequency{DAILY,WEEKLY,MONTHLY};
     private Boolean isActive;
-    private LocalDateTime createAt;
-    private AppUser appUser;
-
+    private LocalDateTime createdAt;
+    private UserDTO appUser;
 
 }

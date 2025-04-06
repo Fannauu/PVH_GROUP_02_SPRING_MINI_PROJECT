@@ -15,6 +15,4 @@ public class HabitRequest {
     private String title;
     private String description;
     private String frequency;
-    private Boolean isActive;
-    private LocalDateTime createAt;
 }

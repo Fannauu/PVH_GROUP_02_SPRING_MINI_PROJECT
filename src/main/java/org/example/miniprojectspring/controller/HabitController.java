@@ -48,7 +48,7 @@ public class HabitController {
                 ApiResponse.<Habit>builder()
                         .success(true)
                         .message("Get habits by ID successfully")
-                        .payload(null)
+                        .payload(habitService.getHabitById(id))
                         .httpStatus(HttpStatus.OK)
                         .timestamp(LocalDateTime.now())
                         .build()
@@ -72,12 +72,12 @@ public class HabitController {
 
     @Operation(summary = "Update habits by ID")
     @PutMapping("/{habit-id}")
-    public ResponseEntity<ApiResponse<Habit>> updateHabit(@PathVariable("habit-id") UUID id) {
+    public ResponseEntity<ApiResponse<Habit>> updateHabit(@PathVariable("habit-id") UUID id, @RequestBody HabitRequest habitRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.<Habit>builder()
                         .success(true)
                         .message("Update habits successfully")
-                        .payload(null)
+                        .payload(habitService.updateHabitById(id, habitRequest))
                         .httpStatus(HttpStatus.OK)
                         .timestamp(LocalDateTime.now())
                         .build()
@@ -92,7 +92,7 @@ public class HabitController {
                 ApiResponse.<Habit>builder()
                         .success(true)
                         .message("Deleted habits successfully")
-                        .payload(null)
+                        .payload(habitService.deleteHabitById(id))
                         .httpStatus(HttpStatus.OK)
                         .timestamp(LocalDateTime.now())
                         .build()
