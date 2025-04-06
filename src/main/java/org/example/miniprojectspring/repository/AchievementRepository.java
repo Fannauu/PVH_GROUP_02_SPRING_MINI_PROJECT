@@ -11,7 +11,9 @@ import java.util.UUID;
 @Mapper
 public interface AchievementRepository {
     @Select("""
-        select * from achievements
+        select * from achievements 
+        OFFSET #{size} * (#{page} - 1)
+        LIMIT #{size}
     """)
     @Results(id = "achievementMapper", value = {
             @Result(property = "id", column = "achievement_id", typeHandler = UUIDTypeHandler.class),
@@ -28,6 +30,8 @@ public interface AchievementRepository {
     FROM app_user_achievements aua
     JOIN achievements a ON a.achievement_id = aua.achievement_id
     WHERE aua.app_user_id = #{userId}
+    OFFSET #{size} * (#{page} - 1)
+    LIMIT #{size}
     
 """)
     @ResultMap("achievementMapper")

@@ -3,18 +3,18 @@ CREATE  DATABASE SpringMiniProject;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 
-create table if not exists public.app_users
-(
-    app_user_id   uuid      default uuid_generate_v4() not null
-        primary key,
-    username      varchar(255)                         not null,
-    email         varchar(255)                         not null,
-    password      varchar(255)                         not null,
-    level         integer   default 1,
-    xp            integer   default 0,
-    profile_image varchar(255),
-    is_verified   boolean   default false,
-    created_at    timestamp default now()
+
+
+CREATE TABLE app_users (
+                           app_user_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                           username VARCHAR(255) NOT NULL,
+                           email VARCHAR(255) UNIQUE NOT NULL,
+                           password VARCHAR(255) NOT NULL,
+                           level INTEGER DEFAULT 0,
+                           xp INTEGER DEFAULT 0,
+                           profile_image VARCHAR(255),
+                           is_verified BOOLEAN DEFAULT false,
+                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE achievements (
@@ -37,7 +37,7 @@ CREATE TABLE habits (
                         title VARCHAR(255) NOT NULL,
                         description TEXT,
                         frequency VARCHAR(255),
-                        is_active BOOLEAN,
+                        is_active BOOLEAN DEFAULT true,
                         app_user_id UUID REFERENCES app_users(app_user_id) ON DELETE CASCADE ON UPDATE CASCADE ,
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -47,8 +47,9 @@ CREATE TABLE habit_logs (
                             habit_id UUID REFERENCES habits(habit_id) ON UPDATE CASCADE ON DELETE CASCADE,
                             log_date TIMESTAMP NOT NULL,
                             status VARCHAR(255),
-                            xp_earned INTEGER
+                            xp_earned INTEGER DEFAULT 0
 );
+
 
 
 
