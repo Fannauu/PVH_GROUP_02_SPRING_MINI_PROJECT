@@ -47,7 +47,7 @@ public interface AppUserRepository {
          WHERE email= #{email}
          """)
     @ResultMap("appUserMapper")
-    AppUser getUserBYEmail(String email);
+    AppUser getUserByEmail(String email);
 
 
 

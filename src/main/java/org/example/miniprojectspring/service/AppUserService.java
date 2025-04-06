@@ -8,10 +8,13 @@ import org.example.miniprojectspring.model.entity.Profile;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface AppUserService extends UserDetailsService {
-    UserDTO register(AppUserRequest request);
+//    UserDTO register(AppUserRequest request);
     UserDTO getAuthenticatedUser();
 
     UserDTO updateNameAndImgOfUser(ProfileRequest profileRequest);
 
     UserDTO deleteCurrentUser();
+    AppUser register(AppUserRequest request);
+    AppUser getUserByEmail(String email);
+    void save(AppUser user);
 }

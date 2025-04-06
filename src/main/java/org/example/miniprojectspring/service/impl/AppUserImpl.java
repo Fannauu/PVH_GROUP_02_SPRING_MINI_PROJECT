@@ -4,6 +4,7 @@ import org.example.miniprojectspring.model.dto.request.AppUserRequest;
 import org.example.miniprojectspring.model.dto.request.ProfileRequest;
 import org.example.miniprojectspring.model.dto.response.UserDTO;
 import org.example.miniprojectspring.model.entity.AppUser;
+import org.example.miniprojectspring.repository.AuthRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.example.miniprojectspring.repository.AppUserRepository;
@@ -15,11 +16,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AppUserImpl implements AppUserService {
+    private  final AuthRepository authRepository;
 
     private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AppUserImpl(AppUserRepository appUserRepository, PasswordEncoder passwordEncoder) {
+    public AppUserImpl(AuthRepository authRepository, AppUserRepository appUserRepository, PasswordEncoder passwordEncoder) {
+        this.authRepository = authRepository;
         this.appUserRepository = appUserRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -27,42 +30,82 @@ public class AppUserImpl implements AppUserService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return appUserRepository.getUserBYEmail(email);
+        AppUser user = appUserRepository.getUserByEmail(email); // Or your method to fetch user by email
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        authRepository.save(user);
+
+     // Should print true if user is verified
+
+        return user;
+//        return appUserRepository.getUserByEmail(email);
     }
 
+//    public UserDTO getAuthenticatedUser() {
+//        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        return authentication;
+//    }
+
+    @Override
     public UserDTO getAuthenticatedUser() {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        System.out.println(authentication.getName());
-        AppUser appUser = appUserRepository.getUserBYEmail(authentication.getName());
-        UserDTO userDTO = appUser.toDto(appUser);
-        return userDTO;
+        return null;
     }
 
     @Override
     public UserDTO updateNameAndImgOfUser(ProfileRequest profileRequest) {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        AppUser appUser = appUserRepository.updateNameAndImgOfUser(authentication.getName(), profileRequest);
-        System.out.println("Name : "+ profileRequest.getName());
-        UserDTO userDTO = appUser.toDto(appUser);
-        System.out.println("Update Profile : " + authentication.getName());
-        System.out.println("Update Profile : " + appUser);
-        System.out.println("Update Profile : " + userDTO);
-        return userDTO;
+        return null;
     }
 
     @Override
     public UserDTO deleteCurrentUser() {
-        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        AppUser appUser = appUserRepository.deleteCurrentUser(authentication.getName());
-        UserDTO userDTO = appUser.toDto(appUser);
-        return userDTO;
+        return null;
     }
 
+    /// /        System.out.println(authentication.getName());
+//        AppUser appUser = appUserRepository.getUserBYEmail(authentication.getName());
+//        UserDTO userDTO = appUser.toDto(appUser);
+//        return userDTO;
+//    }
     @Override
-    public UserDTO register(AppUserRequest request) {
+    public AppUser register(AppUserRequest request) {
         request.setPassword(passwordEncoder.encode(request.getPassword()));
-        AppUser appUser= appUserRepository.register(request);
-        UserDTO userDTO= appUser.toDto(appUser);
-        return userDTO;
+        AppUser appUser= authRepository.register(request);
+        return appUser;
     }
-}
+        @Override
+        public AppUser getUserByEmail (String email) {
+            return appUserRepository.getUserByEmail(email);
+        }
+//            public UserDTO deleteCurrentUser () {
+//                final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//                AppUser appUser = appUserRepository.deleteCurrentUser(authentication.getName());
+//                UserDTO userDTO = appUser.toDto(appUser);
+//                return userDTO;
+//            }
+
+
+            @Override
+            public void save (AppUser appUser){
+                authRepository.save(appUser);
+            // make sure this persists to DB
+//    public UserDTO register(AppUserRequest request) {
+//        request.setPassword(passwordEncoder.encode(request.getPassword()));
+//        AppUser appUser= appUserRepository.register(request);
+//        UserDTO userDTO= appUser.toDto(appUser);
+//        return userDTO;
+            }
+        }
+
+
+
+//    public UserDTO updateNameAndImgOfUser(ProfileRequest profileRequest) {
+////        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+////        AppUser appUser = appUserRepository.updateNameAndImgOfUser(authentication.getName(), profileRequest);
+////        System.out.println("Name : "+ profileRequest.getName());
+////        UserDTO userDTO = appUser.toDto(appUser);
+////        System.out.println("Update Profile : " + authentication.getName());
+////        System.out.println("Update Profile : " + appUser);
+////        System.out.println("Update Profile : " + userDTO);
+////        return userDTO;
+////    }
