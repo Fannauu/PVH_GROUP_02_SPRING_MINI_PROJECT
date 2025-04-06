@@ -18,7 +18,8 @@ public class Habit {
     private UUID id;
     private String title;
     private String description;
-    private enum frequency{DAILY,WEEKLY,MONTHLY};
+//    private enum frequency{DAILY,WEEKLY,MONTHLY};
+    private String frequency;
     private Boolean isActive;
     private LocalDateTime createdAt;
     private UserDTO appUser;

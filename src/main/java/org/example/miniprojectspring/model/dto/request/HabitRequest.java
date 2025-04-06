@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.checkerframework.checker.units.qual.A;
+import org.example.miniprojectspring.model.dto.response.Frequency;
 
 import java.time.LocalDateTime;
 
@@ -14,5 +15,5 @@ import java.time.LocalDateTime;
 public class HabitRequest {
     private String title;
     private String description;
-    private String frequency;
+    private Frequency frequency;
 }
