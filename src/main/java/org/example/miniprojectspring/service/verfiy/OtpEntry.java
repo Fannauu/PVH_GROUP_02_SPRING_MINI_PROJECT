@@ -1,4 +1,4 @@
-package org.example.miniprojectspring.service.Verify;
+package org.example.miniprojectspring.service.verfiy;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
