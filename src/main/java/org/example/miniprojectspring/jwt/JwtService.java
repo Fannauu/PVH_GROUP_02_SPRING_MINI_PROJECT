@@ -3,6 +3,7 @@ package org.example.miniprojectspring.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.AllArgsConstructor;
 import org.example.miniprojectspring.model.entity.AppUser;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -15,14 +16,16 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Component
+//@AllArgsConstructor
 public class JwtService {
 
-    public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60; //5 hour
+    public static final long JWT_TOKEN_VALIDITY = 8 * 60 * 60; //5 hour
     public static final String SECRET = "FVPr6Q/fVlHGZkElZubC0Zaxv657dPUfDQ4o9DADjSin7+uST1d2A5klMWrMK8fmSl3doyf2wn5zj56VC+qqCg==";
+
 
     private String createToken(Map<String, Object> claim, String subject) {
         return Jwts.builder()
-                .claims(claim)
+                .claim(subject, claim)
                 .subject(subject)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
@@ -74,7 +77,11 @@ public class JwtService {
 
     //8. validate token
     public Boolean validateToken(String token, UserDetails userDetails) {
+        if (userDetails == null) {
+            throw new IllegalArgumentException();
+        }
         final String email = extractEmail(token);
         return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
+
 }

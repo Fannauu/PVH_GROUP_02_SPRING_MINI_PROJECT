@@ -1,133 +1,180 @@
 package org.example.miniprojectspring.exception;
 
-import jakarta.validation.ConstraintViolationException;
-import lombok.extern.slf4j.Slf4j;
-import org.example.miniprojectspring.model.dto.response.ApiResponse;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.security.SignatureException;
+import org.example.miniprojectspring.model.dto.response.ErrorResponse;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.*;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
+import javax.naming.AuthenticationException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-@Slf4j
-@RestControllerAdvice
+@ControllerAdvice
 public class GlobalExceptionHandler {
-
-    // Handle validation on DTO fields with @Valid
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<Object>> handleValidationErrors(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error ->
-                errors.put(error.getField(), error.getDefaultMessage())
-        );
-
-        return buildResponse("Validation failed", HttpStatus.BAD_REQUEST, errors);
-    }
-
-    // Handle @Validated on method parameters
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ApiResponse<Object>> handleConstraintViolation(ConstraintViolationException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getConstraintViolations().forEach(v ->
-                errors.put(v.getPropertyPath().toString(), v.getMessage())
-        );
-
-        return buildResponse("Constraint violation", HttpStatus.BAD_REQUEST, errors);
-    }
-
-    // Handle illegal arguments (e.g. pagination)
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiResponse<Object>> handleIllegalArgument(IllegalArgumentException ex) {
-        return buildResponse(ex.getMessage(), HttpStatus.BAD_REQUEST, null);
-    }
-
-    // Handle not found exceptions
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ApiResponse<Object>> handleNotFound(NotFoundException ex) {
-        return buildResponse(ex.getMessage(), HttpStatus.NOT_FOUND, null);
-    }
-
-    // Username not found
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<ApiResponse<Object>> handleUsernameNotFound(UsernameNotFoundException ex) {
-        return buildResponse(ex.getMessage(), HttpStatus.NOT_FOUND, null);
-    }
-
-    // Handle null pointer
-    @ExceptionHandler(NullPointerException.class)
-    public ResponseEntity<ApiResponse<Object>> handleNullPointer(NullPointerException ex) {
-        log.error("NullPointerException", ex);
-        return buildResponse("Unexpected null value occurred", HttpStatus.INTERNAL_SERVER_ERROR, null);
-    }
-
-    // Handle bad credentials (login)
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ApiResponse<Object>> handleBadCredentials(BadCredentialsException ex) {
-        return buildResponse("Invalid username or password", HttpStatus.UNAUTHORIZED, null);
-    }
-
-    // Handle DB constraint violations
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ApiResponse<Object>> handleDataIntegrity(DataIntegrityViolationException ex) {
-        return buildResponse("Database constraint violated: " + ex.getMostSpecificCause().getMessage(), HttpStatus.CONFLICT, null);
-    }
-
-    // andle file too large
-    @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public ResponseEntity<ApiResponse<Object>> handleMaxSizeException(MaxUploadSizeExceededException ex) {
-        return buildResponse("File size exceeds limit!", HttpStatus.PAYLOAD_TOO_LARGE, null);
-    }
-
-    @ExceptionHandler(HttpClientErrorException.Unauthorized.class)
-    public ResponseEntity<?> handleUnauthorized(HttpClientErrorException.Unauthorized ex) {
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of(
-                        "status", 401,
-                        "error", "Unauthorized",
-                        "message", ex.getMessage(),
-                        "timestamp", LocalDateTime.now()
-                ));
-    }
-
-    // Optional: Catch any other 401 manually thrown
-    @ExceptionHandler(value = { AccessDeniedException.class, AuthenticationException.class })
-    public ResponseEntity<?> handleAccessDenied(Exception ex) {
-        return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of(
-                        "status", 401,
-                        "error", "Unauthorized",
-                        "message", ex.getMessage(),
-                        "timestamp", LocalDateTime.now()
-                ));
-    }
-
-//     Catch all
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<ApiResponse<Object>> handleAllOtherExceptions(Exception ex) {
-//        log.error("Unhandled exception occurred", ex);
-//        return buildResponse("An unexpected error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR, null);
+//
+//    @ExceptionHandler(IllegalArgumentException.class)
+//    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
+//        ErrorResponse errorResponse = ErrorResponse.builder()
+//                .status(HttpStatus.BAD_REQUEST.value())
+//                .error("Invalid Argument")
+//                .message(ex.getMessage())
+//                .timestamp(LocalDateTime.now())
+//                .build();
+//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
 //    }
 
-    // Utility method for building consistent response
-    private ResponseEntity<ApiResponse<Object>> buildResponse(String message, HttpStatus status, Object payload) {
-        return ResponseEntity.status(status).body(
-                ApiResponse.builder()
-                        .success(false)
-                        .message(message)
-                        .payload(payload)
-                        .httpStatus(status)
-                        .timestamp(LocalDateTime.now())
-                        .build()
+    @ExceptionHandler(NotFoundException.class)
+    public ProblemDetail handleNotFoundException(NotFoundException e){
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
+        problemDetail.setTitle("Not Found");
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
+        return problemDetail;
+    }
+
+    //Handle with annotations of validation dependency
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ProblemDetail handleMethodValidationException(HandlerMethodValidationException e) {
+
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problemDetail.setTitle("Bad Request");
+        Map<String, String> errors = new HashMap<>();
+
+        e.getParameterValidationResults().forEach(parameterErr -> {
+            String paramName = parameterErr.getMethodParameter().getParameterName();
+            for (var error : parameterErr.getResolvableErrors()){
+                errors.put(paramName, error.getDefaultMessage());
+            }
+        });
+
+        problemDetail.setProperties(Map.of("timestamp", LocalDateTime.now(), "errors", errors));
+
+        return problemDetail;
+    }
+
+    //Handle Input from User
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ProblemDetail handleValidationErrors(MethodArgumentNotValidException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problemDetail.setTitle("Bad Request");
+
+        Map<String, String> errors = new HashMap<>();
+        for (FieldError error : e.getBindingResult().getFieldErrors()){
+            errors.put(error.getField() + ": ", error.getDefaultMessage());
+        }
+        problemDetail.setProperties(Map.of("errors", errors, "timestamp", LocalDateTime.now()));
+
+        return problemDetail;
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ErrorResponse> handleNullPointerException(NullPointerException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Null Pointer Exception",
+                "Something went wrong (null value). Please contact support.",
+                LocalDateTime.now()
         );
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
+    @ExceptionHandler({BadCredentialsException.class, AuthenticationException.class})
+    public ResponseEntity<ErrorResponse> handleUnauthorized(Exception ex) {
+        ErrorResponse error = new ErrorResponse(HttpStatus.UNAUTHORIZED.value(),
+                "Unauthorized",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.FORBIDDEN.value(),
+                "Access Denied",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ErrorResponse> handleJwtException(JwtException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                "JWT Error",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(MalformedJwtException.class)
+    public ResponseEntity<ErrorResponse> handleMalformedJwt(MalformedJwtException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                "Malformed Token",
+                "Token is invalid. Please login again.",
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ErrorResponse> handleExpiredJwt(ExpiredJwtException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                "Token Expired",
+                "Your session has expired. Please login again.",
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(SignatureException.class)
+    public ResponseEntity<ErrorResponse> handleSignatureException(SignatureException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                "Invalid Token Signature",
+                "Token signature is invalid. Please login again.",
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                "Database Error",
+                "Data conflict occurred. Possible duplicate entry.",
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(Exception.class) // catch-all fallback
+    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Internal Server Error",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

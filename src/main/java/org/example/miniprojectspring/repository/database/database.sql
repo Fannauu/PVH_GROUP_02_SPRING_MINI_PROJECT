@@ -80,3 +80,9 @@ VALUES
     ('Profile Complete', 'Completed profile info', 'badge_profile.png', 50),
     ('Task Master', 'Completed 50 habit logs', 'badge_taskmaster.png', 800),
     ('Pro Planner', 'Created 10 habits', 'badge_planner.png', 300);
+
+
+SELECT a.*
+FROM app_user_achievements aua
+         JOIN achievements a ON a.achievement_id = aua.achievement_id
+WHERE aua.app_user_id = '69031cab-2263-4a96-9c10-6184b2dba7cf'
