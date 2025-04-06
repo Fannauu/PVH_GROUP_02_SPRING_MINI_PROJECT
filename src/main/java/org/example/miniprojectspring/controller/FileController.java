@@ -1,6 +1,5 @@
 package org.example.miniprojectspring.controller;
 
-
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.example.miniprojectspring.model.dto.response.ApiResponse;
