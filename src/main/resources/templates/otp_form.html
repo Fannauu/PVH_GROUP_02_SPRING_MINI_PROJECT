@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Send OTP</title>
+</head>
+<body>
+<h2>
+    Send OTP to Email
+</h2>
+
+<form th:action="@{/send-otp}" method="post">
+    <input type="email" name="email" placeholder="Enter Email" required>
+    <button type="submit">Send OTP</button>
+</form>
+</body>
+</html>

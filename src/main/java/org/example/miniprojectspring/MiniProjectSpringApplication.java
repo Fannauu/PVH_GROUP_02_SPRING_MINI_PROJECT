@@ -23,6 +23,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         scheme = "bearer",
         in = SecuritySchemeIn.HEADER
 )
+
 @SpringBootApplication
 public class MiniProjectSpringApplication {
 

@@ -1,6 +1,7 @@
 package org.example.miniprojectspring.model.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.miniprojectspring.model.dto.response.UserDTO;
@@ -18,7 +19,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@Builder
+@Builder
 public class AppUser implements UserDetails {
     private UUID id;
     private String name;
@@ -74,4 +75,11 @@ public class AppUser implements UserDetails {
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
     }
+
+//    public UserDTO toDto(AppUser appUser){
+//        if (appUser == null){
+//            return null;
+//        }
+//        return UserDTO(appUser.ge);
+//    }
 }

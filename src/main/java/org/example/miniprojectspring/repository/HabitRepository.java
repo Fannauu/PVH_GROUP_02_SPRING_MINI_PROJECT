@@ -4,7 +4,6 @@ package org.example.miniprojectspring.repository;
 import org.apache.ibatis.annotations.*;
 import org.example.miniprojectspring.UUIDHandler.UUIDTypeHandler;
 import org.example.miniprojectspring.model.dto.request.HabitRequest;
-import org.example.miniprojectspring.model.entity.AppUser;
 import org.example.miniprojectspring.model.entity.Habit;
 
 import java.util.List;
@@ -13,65 +12,49 @@ import java.util.UUID;
 @Mapper
 public interface HabitRepository {
     @Select("""
-    SELECT h.*, u.*
-    FROM habits h
-    JOIN app_users u ON h.app_user_id = u.app_user_id
-    WHERE u.email = #{email}
-""")
+                SELECT h.habit_id, h.title, h.description, h.frequency, h.is_active, h.app_user_id
+                FROM habits h
+                offset #{size} * (#{page} -1)
+                limit #{size}
+            
+            """)
     @Results(id = "habitMapper", value = {
             @Result(property = "id", column = "habit_id", typeHandler = UUIDTypeHandler.class),
-            @Result(property = "name", column = "username"),
-            @Result(property = "profileImage", column = "profile_image"),
-            @Result(property = "xpLevel", column = "xp"),
+            @Result(property = "title", column = "title"),
+            @Result(property = "description", column = "description"),
             @Result(property = "isActive", column = "is_active"),
-            @Result(property = "createAt", column = "created_at"),
-            @Result(property = "appUser", column = "email",
-                    one = @One(select = "org.example.miniprojectspring.repository.AppUserRepository.getUserBYEmail")
-            )
+            @Result(property = "createdAt", column = "created_at"),
+            @Result(property = "appUser", column = "app_user_id",
+                    one = @One(select = "org.example.miniprojectspring.repository.AppUserRepository.getCurrentUserById"))
     })
-    List<Habit> getAllHabits(@Param("email") String email);
-
-
-//    fixed this
+    List<Habit> getAllHabits(Integer size, Integer page);
 
     @Select("""
-                    SELECT * FROM app_users where app_user_id = #{id}
+                SELECT h.habit_id, h.title, h.description, h.frequency, h.is_active, h.app_user_id
+                FROM habits h WHERE h.habit_id = #{id}
             """)
-//    @Result(property = "id",column = "app_user_id",typeHandler = UUIDTypeHandler.class)
-    AppUser getUserByUserId(UUID id);
-
-// end fixed
-
+    @ResultMap("habitMapper")
+    Habit getHabitById(UUID id);
 
     @Select("""
-                INSERT INTO habits (title,description,frequency)
-                VALUES (#{request.title},#{request.description},#{request.frequency})
+                INSERT INTO habits(title, description, frequency, app_user_id) VALUES (#{request.title}, #{request.description}, #{request.frequency}, 
+                                                                                       (SELECT app_user_id FROM app_users WHERE email = #{email}))
                 RETURNING *
             """)
     @ResultMap("habitMapper")
-    Habit postHabits(@Param("request") HabitRequest habitRequest);
+    @Result(property = "email", column = "email")
+    Habit postHabits(@Param("request") HabitRequest habitRequest, String email);
 
 
     @Select("""
-                SELECT * FROM habits where habit_id = #{id}
+                UPDATE habits SET title = #{request.title}, description = #{request.description} , frequency = #{request.frequency} WHERE habit_id = #{id} RETURNING *
             """)
     @ResultMap("habitMapper")
-    Habit getHabitById(@Param("id") UUID id);
-
+    Habit updateHabitById(UUID id, @Param("request") HabitRequest habitRequest);
 
     @Select("""
-                UPDATE SET title = #{request.title}, description = #{request.description}, frequency = #{request.frequency}
-                WHERE habit_id = #{id}
-                RETURNING *
+            DELETE FROM habits WHERE habit_id = #{id} RETURNING *
             """)
     @ResultMap("habitMapper")
-    Habit updateHabitById(@Param("id") UUID id, @Param("request") HabitRequest habitRequest);
-
-
-    @Select("""
-                DELETE FROM habits where habit_id = #{id}
-                RETURNING *
-            """)
-    @ResultMap("habitMapper")
-    Habit deleteHabitById(@Param("id") UUID id);
+    Habit deleteHabitById(UUID id);
 }

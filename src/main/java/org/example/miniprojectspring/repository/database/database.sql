@@ -2,9 +2,6 @@ CREATE  DATABASE SpringMiniProject;
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-
-
-
 CREATE TABLE app_users (
                            app_user_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                            username VARCHAR(255) NOT NULL,
@@ -42,48 +39,99 @@ CREATE TABLE habits (
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+ALTER TABLE habit_logs
+    ALTER COLUMN log_date SET DEFAULT CURRENT_TIMESTAMP;
 CREATE TABLE habit_logs (
                             habit_log_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
                             habit_id UUID REFERENCES habits(habit_id) ON UPDATE CASCADE ON DELETE CASCADE,
-                            log_date TIMESTAMP NOT NULL,
+                            log_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                             status VARCHAR(255),
                             xp_earned INTEGER DEFAULT 0
 );
 
 
+-- Function to handle when habit log
+CREATE OR REPLACE FUNCTION handle_habit_log_insert()
+    RETURNS TRIGGER AS $$
+DECLARE
+    v_app_user_id UUID;
+    v_frequency VARCHAR(255);
+    v_xp_gain INTEGER := 0;
+    v_new_xp INTEGER;
+    v_current_xp INTEGER;
+BEGIN
+    -- Find app_user_id and frequency in habits
+    SELECT h.app_user_id, h.frequency INTO v_app_user_id, v_frequency
+    FROM habits h
+    WHERE h.habit_id = NEW.habit_id;
+
+    -- Check if status is COMPLETE with any frequency
+    IF NEW.status = 'COMPLETE' THEN
+        -- condition on frequency
+        IF v_frequency = 'DAILY' THEN
+            v_xp_gain := 10;
+        ELSIF v_frequency = 'WEEKLY' THEN
+            v_xp_gain := 20;
+        ELSIF v_frequency = 'MONTHLY' THEN
+            v_xp_gain := 30;
+        END IF;
+
+        -- Add xp to app_users
+        UPDATE app_users
+        SET xp = xp + v_xp_gain
+        WHERE app_user_id = v_app_user_id
+        RETURNING xp INTO v_current_xp;
+
+        -- condition to app level and still keep the current value
+        IF v_current_xp >= 100 AND (SELECT level FROM app_users WHERE app_user_id = v_app_user_id) = 0 THEN
+            UPDATE app_users
+            SET level = 1, xp = 100
+            WHERE app_user_id = v_app_user_id;
+        END IF;
+
+        -- If XP >= 100, update level and keep XP > 100 for future levels
+        IF v_current_xp >= 100 THEN
+            WHILE v_current_xp >= 100 LOOP
+                    UPDATE app_users
+                    SET level = level + 1
+                    WHERE app_user_id = v_app_user_id;
 
 
+                    v_current_xp := v_current_xp - 100;
+                    UPDATE app_users
+                    SET xp = v_current_xp
+                    WHERE app_user_id = v_app_user_id;
+                END LOOP;
+        END IF;
 
+        -- Insert achievements
+        INSERT INTO app_user_achievements (app_user_achievement_id, app_user_id, achievement_id)
+        SELECT uuid_generate_v4(), v_app_user_id, a.achievement_id
+        FROM achievements a
+        WHERE a.xp_required <= v_current_xp
+          AND NOT EXISTS (
+            SELECT 1
+            FROM app_user_achievements aua
+            WHERE aua.app_user_id = v_app_user_id
+              AND aua.achievement_id = a.achievement_id
+        )
+        ORDER BY a.xp_required DESC;
+    ELSE
+        -- If status = MISSED or any other, give 0 XP
+        v_xp_gain := 0;
+    END IF;
 
-INSERT INTO app_users (username, email, password, level, xp, profile_image, is_verified)
-VALUES
-    ('alice', 'alice@example.com', 'password123', 2, 150, 'alice.png', true),
-    ('bob', 'bob@example.com', 'securepass', 3, 400, 'bob.jpg', true),
-    ('carla', 'carla@example.com', 'pass456', 1, 50, NULL, false),
-    ('david', 'david@example.com', 'david123', 4, 800, 'david.png', true),
-    ('ella', 'ella@example.com', 'ella2024', 1, 20, NULL, false),
-    ('frank', 'frank@example.com', 'frankly', 2, 250, 'frank.jpg', true),
-    ('grace', 'grace@example.com', 'grace!pass', 5, 1000, 'grace.jpg', true),
-    ('harry', 'harry@example.com', 'harry456', 1, 70, NULL, false),
-    ('isla', 'isla@example.com', 'islapass', 3, 350, 'isla.png', true),
-    ('jack', 'jack@example.com', 'jack1234', 2, 200, NULL, false);
+    -- Always update habit_logs with xp_earned
+    UPDATE habit_logs
+    SET xp_earned = v_xp_gain
+    WHERE habit_log_id = NEW.habit_log_id;
 
--- Insert Data into achievements
-INSERT INTO achievements (title, description, badge, xp_required)
-VALUES
-    ('First Login', 'Logged in for the first time', 'badge_login.png', 0),
-    ('Beginner Level', 'Reached level 1', 'badge_level1.png', 100),
-    ('Habit Streak', 'Completed a habit 7 days in a row', 'badge_streak.png', 500),
-    ('Consistency King', 'Logged habits for 30 days', 'badge_consistency.png', 1000),
-    ('Early Riser', 'Logged habit before 6AM', 'badge_early.png', 200),
-    ('Night Owl', 'Logged habit after 10PM', 'badge_nightowl.png', 200),
-    ('Socializer', 'Connected with 5 friends', 'badge_social.png', 150),
-    ('Profile Complete', 'Completed profile info', 'badge_profile.png', 50),
-    ('Task Master', 'Completed 50 habit logs', 'badge_taskmaster.png', 800),
-    ('Pro Planner', 'Created 10 habits', 'badge_planner.png', 300);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
-
-SELECT a.*
-FROM app_user_achievements aua
-         JOIN achievements a ON a.achievement_id = aua.achievement_id
-WHERE aua.app_user_id = '69031cab-2263-4a96-9c10-6184b2dba7cf'
+-- Create the trigger
+CREATE TRIGGER habit_log_insert_trigger
+    AFTER INSERT ON habit_logs
+    FOR EACH ROW
+EXECUTE FUNCTION handle_habit_log_insert();

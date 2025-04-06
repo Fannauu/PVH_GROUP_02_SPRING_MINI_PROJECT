@@ -24,16 +24,26 @@ public class AppUserImpl implements AppUserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return appUserRepository.getUserBYEmail(email);
+        AppUser user = appUserRepository.getUserBYEmail(email); // Or your method to fetch user by email
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+     // Should print true if user is verified
+
+        return user;
+////        return appUserRepository.getUserByEmail(email);
+//        if (identifier.contains("@")){
+//            return appUserRepository.getUserBYEmail(identifier);}
+//        return appUserRepository.getByUserName(identifier);
     }
 
     public UserDTO getAuthenticatedUser() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        System.out.println(authentication.getName());
+        System.out.println(authentication.getName());
         AppUser appUser = appUserRepository.getUserBYEmail(authentication.getName());
+        System.out.println("AppUser: " + appUser);
         UserDTO userDTO = appUser.toDto(appUser);
         return userDTO;
     }
@@ -59,10 +69,30 @@ public class AppUserImpl implements AppUserService {
     }
 
     @Override
+    public AppUser getUserByEmail(String email) {
+        return appUserRepository.getUserBYEmail(email);
+    }
+
+    @Override
+    public void save(AppUser user) {
+        appUserRepository.save(user);
+    }
+
+    @Override
     public UserDTO register(AppUserRequest request) {
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         AppUser appUser= appUserRepository.register(request);
         UserDTO userDTO= appUser.toDto(appUser);
         return userDTO;
     }
+
+//    @Override
+//    public UserDTO getAuthenticatedUser() {
+//        return ;
+//    }
+
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        return null;
+//    }
 }

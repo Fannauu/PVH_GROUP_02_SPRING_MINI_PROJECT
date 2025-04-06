@@ -4,6 +4,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
+import org.apache.ibatis.reflection.ReflectionException;
 import org.example.miniprojectspring.model.dto.response.ErrorResponse;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -18,23 +19,34 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import javax.naming.AuthenticationException;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-//
-//    @ExceptionHandler(IllegalArgumentException.class)
-//    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
-//        ErrorResponse errorResponse = ErrorResponse.builder()
-//                .status(HttpStatus.BAD_REQUEST.value())
-//                .error("Invalid Argument")
-//                .message(ex.getMessage())
-//                .timestamp(LocalDateTime.now())
-//                .build();
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-//    }
+
+    private ProblemDetail createProblemDetail(HttpStatus status, String detail) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(status, detail);
+        problemDetail.setTitle(status.getReasonPhrase());
+        return problemDetail;
+    }
+
+    @ExceptionHandler(ReflectionException.class)
+    public ProblemDetail handleReflectionException(ReflectionException ex) {
+        return createProblemDetail(HttpStatus.BAD_REQUEST, "Invalid property access or getter not found: " + ex.getMessage());
+    }
+
+    @ExceptionHandler(SQLException.class)
+    public ProblemDetail handleSQLException(SQLException ex) {
+        return createProblemDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Database operation failed. Please try again later.");
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ProblemDetail handleIllegalArgumentException(IllegalArgumentException ex) {
+        return createProblemDetail(HttpStatus.BAD_REQUEST, "Invalid input provided: " + ex.getMessage());
+    }
 
     @ExceptionHandler(NotFoundException.class)
     public ProblemDetail handleNotFoundException(NotFoundException e){
@@ -44,10 +56,8 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
-    //Handle with annotations of validation dependency
     @ExceptionHandler(HandlerMethodValidationException.class)
     public ProblemDetail handleMethodValidationException(HandlerMethodValidationException e) {
-
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problemDetail.setTitle("Bad Request");
         Map<String, String> errors = new HashMap<>();
@@ -64,7 +74,6 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
-    //Handle Input from User
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleValidationErrors(MethodArgumentNotValidException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
@@ -89,7 +98,6 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
 
     @ExceptionHandler({BadCredentialsException.class, AuthenticationException.class})
     public ResponseEntity<ErrorResponse> handleUnauthorized(Exception ex) {
@@ -167,14 +175,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(Exception.class) // catch-all fallback
-    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
+    // Handle other exceptions globally
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGeneralException(Exception e) {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Internal Server Error",
-                ex.getMessage(),
+                "Something went wrong ",
+                e.getMessage(),
                 LocalDateTime.now()
         );
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST); // 500 Internal Server Error
     }
+
 }

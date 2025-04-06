@@ -23,7 +23,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @SecurityRequirement(name = "bearerAuth")
 public class AchievementController {
-    private  final AchievementService achievementService;
+
+    private final AchievementService achievementService;
 
     @Operation(summary = "Get all achievements" )
     @GetMapping
@@ -60,6 +61,5 @@ public class AchievementController {
                         .build()
         );
     }
-
 
 }

@@ -32,7 +32,6 @@ public interface AchievementRepository {
     WHERE aua.app_user_id = #{userId}
     OFFSET #{size} * (#{page} - 1)
     LIMIT #{size}
-    
 """)
     @ResultMap("achievementMapper")
     List<Achievement> getAchievementByAppUserId(

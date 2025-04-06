@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.example.miniprojectspring.model.dto.response.Status;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -15,7 +16,8 @@ import java.util.UUID;
 //@Builder
 public class HabitLog {
     private UUID id;
-    private LocalDateTime dateTime;
+    private LocalDateTime logDate;
     private Status status;
     private Integer xpEarned;
+    private List<HabitLog> habitId;
 }

@@ -20,8 +20,8 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/v1/profiles")
-@RequiredArgsConstructor
 @SecurityRequirement(name = "bearerAuth")
+@RequiredArgsConstructor
 public class ProfileController {
     private final AppUserService appUserService;
 

@@ -3,6 +3,8 @@ package org.example.miniprojectspring.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.example.miniprojectspring.model.dto.request.HabitRequest;
 import org.example.miniprojectspring.model.dto.response.ApiResponse;
 import org.example.miniprojectspring.model.entity.Habit;
@@ -28,13 +30,13 @@ public class HabitController {
 
     @Operation(summary = "Get all habits")
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Habit>>> getAllHabits() {
-        List<Habit> habits = habitService.getCurrentUserHabits();
-        return ResponseEntity.ok(
+    public ResponseEntity<ApiResponse<List<Habit>>> getAllHabits(@Positive @Valid @RequestParam(defaultValue = "10") Integer size ,@Positive @RequestParam(defaultValue = "1") Integer page) {
+//        System.out.println("getAllHabits"+ habitService.getAllHabits());
+        return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.<List<Habit>>builder()
                         .success(true)
                         .message("Get all habits successfully")
-                        .payload(habits)
+                        .payload(habitService.getAllHabits(size,page))
                         .httpStatus(HttpStatus.OK)
                         .timestamp(LocalDateTime.now())
                         .build()
@@ -42,8 +44,8 @@ public class HabitController {
     }
 
     @Operation(summary = "Get habits by ID")
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Habit>> getHabitById(@PathVariable UUID id) {
+    @GetMapping("/{habit-id}")
+    public ResponseEntity<ApiResponse<Habit>> getHabitById(@Valid @PathVariable("habit-id") UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.<Habit>builder()
                         .success(true)
@@ -58,7 +60,7 @@ public class HabitController {
 
     @Operation(summary = "Create a new habits")
     @PostMapping
-    public ResponseEntity<ApiResponse<Habit>> postHabits(@RequestBody HabitRequest habitRequest) {
+    public ResponseEntity<ApiResponse<Habit>> postHabits(@Valid @RequestBody HabitRequest habitRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.<Habit>builder()
                         .success(true)
@@ -72,12 +74,12 @@ public class HabitController {
 
     @Operation(summary = "Update habits by ID")
     @PutMapping("/{habit-id}")
-    public ResponseEntity<ApiResponse<Habit>> updateHabitById(@PathVariable("habit-id") UUID id, @RequestBody HabitRequest habitRequest) {
+    public ResponseEntity<ApiResponse<Habit>> updateHabit(@Valid @PathVariable("habit-id") UUID id, @RequestBody HabitRequest habitRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.<Habit>builder()
                         .success(true)
                         .message("Update habits successfully")
-                        .payload(habitService.updateHabitById(id,habitRequest))
+                        .payload(habitService.updateHabitById(id, habitRequest))
                         .httpStatus(HttpStatus.OK)
                         .timestamp(LocalDateTime.now())
                         .build()
