@@ -1,6 +1,7 @@
 package org.example.miniprojectspring.model.dto.request;
 
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class HabitLogRequest {
+    @NotBlank(message = "status can't blank")
     private Status status;
+    @NotBlank(message = "status can't blank")
     private UUID habitId;
 }

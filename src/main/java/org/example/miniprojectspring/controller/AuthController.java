@@ -58,34 +58,63 @@ public class AuthController {
         }
     }
 
-
     // Verify OTP
+    @Operation(summary = "verify-otp Login")
     @PostMapping("/verify-otp")
-    public ResponseEntity<String> verifyOtp(@RequestParam String email, @RequestParam String otp) throws Exception {
+    public ResponseEntity<ApiResponse<String>> verifyOtp(@RequestParam String email, @RequestParam String otp) throws Exception {
         OtpEntry entry = otpService.getOtpEntry(email);
         if (entry == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("OTP NOT FOUND");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    ApiResponse.<String>builder()
+                            .success(true)
+                            .message("opt not found !!")
+                            .payload(null)
+                            .httpStatus(HttpStatus.BAD_REQUEST)
+                            .timestamp(LocalDateTime.now())
+                            .build()
+            );
         }
 
         // Check if OTP expired
         if (LocalDateTime.now().isAfter(entry.getExpiryTime())) {
             otpService.clearOtp(email); // Optional clear expired OTP
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("OTP EXPIRED, Please resend email to get a new OTP");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    ApiResponse.<String>builder()
+                            .success(true)
+                            .message("opt are expired!!")
+                            .payload(null)
+                            .httpStatus(HttpStatus.BAD_REQUEST)
+                            .timestamp(LocalDateTime.now())
+                            .build()
+            );
         }
 
         // Validate OTP value
         if (!entry.getOtp().equals(otp)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Invalid OTP, please try again");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    ApiResponse.<String>builder()
+                            .success(true)
+                            .message("can't get OTP")
+                            .payload(null)
+                            .httpStatus(HttpStatus.BAD_REQUEST)
+                            .timestamp(LocalDateTime.now())
+                            .build()
+            );
         }
 
         // OTP is valid, proceed with verification
         AppUser user = appUserService.getUserByEmail(email);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("USER NOT FOUND");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    ApiResponse.<String>builder()
+                            .success(true)
+                            .message("valid opt !!")
+                            .payload(null)
+                            .httpStatus(HttpStatus.BAD_REQUEST)
+                            .timestamp(LocalDateTime.now())
+                            .build()
+            );
+
         }
         System.out.println(user.toString());
 
@@ -96,11 +125,13 @@ public class AuthController {
         // Clear OTP after successful verification
         otpService.clearOtp(email);
 
-        return ResponseEntity.ok("OTP verified successfully.");
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.<String>builder().build()
+        );
     }
 
 
-//login
+    //login
     @Operation(summary = "User Login")
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(@RequestBody AppUserLoginRequest appUserLoginRequest) throws Exception {
@@ -111,9 +142,9 @@ public class AuthController {
         AppUser user = appUserService.getUserByEmail(appUserLoginRequest.getIdentifier());
         System.out.println("user2 : " + appUserLoginRequest.getIdentifier());
         if (!user.getIsVerified()) {
-            throw new NotFoundException("User "  +appUserLoginRequest.getIdentifier() + " are not verified");
+            throw new NotFoundException("User " + appUserLoginRequest.getIdentifier() + " are not verified");
         }
-        if(!passwordEncoder.matches(appUserLoginRequest.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(appUserLoginRequest.getPassword(), user.getPassword())) {
             throw new BadCredentialsException("Wrong password");
         }
         if (!user.getEmail().equals(appUserLoginRequest.getIdentifier())) {
@@ -125,7 +156,6 @@ public class AuthController {
         AuthResponse authResponse = new AuthResponse(token);
         return ResponseEntity.ok(authResponse);
     }
-
 
 
     // Register AppUserRequest
@@ -164,11 +194,9 @@ public class AuthController {
     }
 
 
-
-
     //Resend Email to a new OTP
     @PostMapping("/resend")
-    public ResponseEntity<ApiResponse> resend(@RequestParam String email){
+    public ResponseEntity<ApiResponse> resend(@RequestParam String email) {
 
         if (appUserService.loadUserByUsername(email).equals(email)) {
             ApiResponse apiResendResponse = ApiResponse.builder()
@@ -196,36 +224,5 @@ public class AuthController {
                 .build();
         return ResponseEntity.ok(responseSuccess);
     }
-
-
-
-
-
-
-//    @Operation(summary = "User Register")
-//    @PostMapping("/register")
-//    public ResponseEntity<ApiResponse<UserDTO>> register(@RequestBody @Valid AppUserRequest appUserRequest){
-//        return ResponseEntity.status(HttpStatus.OK).body(
-//                ApiResponse.<UserDTO>builder()
-//                        .success(true)
-//                        .message("Register user successfully")
-//                        .httpStatus(HttpStatus.CREATED)
-//                        .payload(appUserService.register(appUserRequest))
-//                        .timestamp(LocalDateTime.now())
-//                        .build()
-//        );
-//    }
-
-
-//    @Operation(summary = "User Login")
-//    @PostMapping("/login")
-//    public ResponseEntity<?> authenticate(@RequestBody AuthRequest request) throws Exception {
-//        authenticate(request.getEmail(), request.getPassword());
-//        final UserDetails userDetails = appUserService.loadUserByUsername(request.getEmail());
-//        final String token = jwtService.generateToken(userDetails);
-//        AuthResponse authResponse = new AuthResponse(token);
-//        return ResponseEntity.ok(authResponse);
-//    }
-
 
 }

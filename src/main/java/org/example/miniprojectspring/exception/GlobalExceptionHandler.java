@@ -175,14 +175,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(Exception.class) // catch-all fallback
-    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
+    // Handle other exceptions globally
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGeneralException(Exception e) {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Internal Server Error",
-                ex.getMessage(),
+                "Something went wrong ",
+                e.getMessage(),
                 LocalDateTime.now()
         );
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST); // 500 Internal Server Error
     }
+
 }

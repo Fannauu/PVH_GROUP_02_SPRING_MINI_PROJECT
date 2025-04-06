@@ -30,7 +30,7 @@ public class HabitLogController {
     // Get Method
     @Operation(summary = "Get all habit logs by habit ID ")
     @GetMapping("/{habit-id}")
-    public ResponseEntity<ApiResponse<List<HabitLog>>> getHabitLogByHabitId(@PathVariable("habit-id") UUID id , @Positive @Valid @RequestParam(defaultValue = "10") Integer size ,@Positive @RequestParam(defaultValue = "1") Integer page) {
+    public ResponseEntity<ApiResponse<List<HabitLog>>> getHabitLogByHabitId(@Valid @PathVariable("habit-id") UUID id , @Positive @RequestParam(defaultValue = "10") Integer size ,@Positive @RequestParam(defaultValue = "1") Integer page) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 ApiResponse.<List<HabitLog>>builder()
                         .success(true)
@@ -45,7 +45,7 @@ public class HabitLogController {
     // Post Method
     @Operation(summary = "Create a new habit log")
     @PostMapping
-    public ResponseEntity<ApiResponse<HabitLog>> createHabitLog(@RequestBody HabitLogRequest habitLogRequest) {
+    public ResponseEntity<ApiResponse<HabitLog>> createHabitLog(@Valid @RequestBody HabitLogRequest habitLogRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 ApiResponse.<HabitLog>builder()
                         .success(true)

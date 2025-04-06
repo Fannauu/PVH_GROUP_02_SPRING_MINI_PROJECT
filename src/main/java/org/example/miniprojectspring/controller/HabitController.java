@@ -45,7 +45,7 @@ public class HabitController {
 
     @Operation(summary = "Get habits by ID")
     @GetMapping("/{habit-id}")
-    public ResponseEntity<ApiResponse<Habit>> getHabitById(@PathVariable("habit-id") UUID id) {
+    public ResponseEntity<ApiResponse<Habit>> getHabitById(@Valid @PathVariable("habit-id") UUID id) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.<Habit>builder()
                         .success(true)
@@ -60,7 +60,7 @@ public class HabitController {
 
     @Operation(summary = "Create a new habits")
     @PostMapping
-    public ResponseEntity<ApiResponse<Habit>> postHabits(@RequestBody HabitRequest habitRequest) {
+    public ResponseEntity<ApiResponse<Habit>> postHabits(@Valid @RequestBody HabitRequest habitRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.<Habit>builder()
                         .success(true)
@@ -74,7 +74,7 @@ public class HabitController {
 
     @Operation(summary = "Update habits by ID")
     @PutMapping("/{habit-id}")
-    public ResponseEntity<ApiResponse<Habit>> updateHabit(@PathVariable("habit-id") UUID id, @RequestBody HabitRequest habitRequest) {
+    public ResponseEntity<ApiResponse<Habit>> updateHabit(@Valid @PathVariable("habit-id") UUID id, @RequestBody HabitRequest habitRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.<Habit>builder()
                         .success(true)
