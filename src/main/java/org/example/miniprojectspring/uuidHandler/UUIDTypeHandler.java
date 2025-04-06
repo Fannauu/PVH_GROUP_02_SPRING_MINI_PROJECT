@@ -1,4 +1,4 @@
-package org.example.miniprojectspring.UUIDHandler;
+package org.example.miniprojectspring.uuidHandler;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
