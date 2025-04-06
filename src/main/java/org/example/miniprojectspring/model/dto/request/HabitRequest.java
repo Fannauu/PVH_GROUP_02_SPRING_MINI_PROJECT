@@ -1,17 +1,20 @@
 package org.example.miniprojectspring.model.dto.request;
 
-import lombok.Data;
+
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.miniprojectspring.model.dto.response.Frequency;
+import org.checkerframework.checker.units.qual.A;
+
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@Builder
 public class HabitRequest {
     private String title;
     private String description;
-    private Frequency frequency;
-
+    private String frequency;
+    private Boolean isActive;
+    private LocalDateTime createAt;
 }

@@ -1,8 +1,9 @@
 package org.example.miniprojectspring.model.entity;
 
+
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.example.miniprojectspring.model.dto.response.Frequency;
 
@@ -14,11 +15,13 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class Habit {
-    private UUID habitId;
+    private UUID id;
     private String title;
     private String description;
     private Frequency frequency;
     private Boolean isActive;
-//    private Profile appUserId;
-    private LocalDateTime createdAt;
+    private LocalDateTime createAt;
+    private AppUser appUser;
+
+
 }

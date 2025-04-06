@@ -3,7 +3,7 @@ package org.example.miniprojectspring.repository;
 import org.apache.ibatis.annotations.*;
 import org.example.miniprojectspring.model.dto.request.HabitLogRequest;
 import org.example.miniprojectspring.model.entity.HabitLog;
-import org.example.miniprojectspring.uuidHandler.UUIDTypeHandler;
+
 
 import java.util.UUID;
 
@@ -16,11 +16,11 @@ public interface HabitLogRepository {
     WHERE habit_id = #{habitId}
 """)
     @Results(id = "habitLogMapper", value = {
-            @Result(property = "habitLogId", column = "habit_log_id",typeHandler = UUIDTypeHandler.class),
+            @Result(property = "habitLogId", column = "habit_log_id",typeHandler = org.example.miniprojectspring.UUIDHandler.UUIDTypeHandler.class),
             @Result(property = "logDate", column = "log_date"),
             @Result(property = "status", column = "status"),
             @Result(property = "xpEarned", column = "xp_earned"),
-            @Result(property = "habitId", column = "habit_id", typeHandler = UUIDTypeHandler.class,
+            @Result(property = "habitId", column = "habit_id", typeHandler = org.example.miniprojectspring.UUIDHandler.UUIDTypeHandler.class,
                     one = @One(select = "org.example.miniprojectspring.repository.HabitRepository.getHabitById"))
     })
     HabitLog getHabitLogByHabitId(UUID habitId);
@@ -28,10 +28,10 @@ public interface HabitLogRepository {
     //Query Post Method
     @Select("""
     INSERT INTO habit_logs (status, habit_id)
-    VALUES ( #{status}, #{habitId} )
+    VALUES ( #{request.status}, #{request.habitId} )
     RETURNING *
 """)
     @ResultMap("habitLogMapper")
-    HabitLog createHabitLog(HabitLogRequest habitLogRequest);
+    HabitLog createHabitLog(@Param("request") HabitLogRequest habitLogRequest);
 
 }

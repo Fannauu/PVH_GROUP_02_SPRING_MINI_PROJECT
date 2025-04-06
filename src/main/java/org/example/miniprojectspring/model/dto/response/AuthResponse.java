@@ -1,5 +1,4 @@
-package org.example.miniprojectspring.model.dto.request;
-
+package org.example.miniprojectspring.model.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@Builder
-public class AuthenticationRequest {
-    private String username;
+public class AuthResponse {
+    private String token;
 }
