@@ -20,9 +20,10 @@ public interface HabitLogRepository {
             @Result(property = "logDate", column = "log_date"),
             @Result(property = "status", column = "status"),
             @Result(property = "xpEarned", column = "xp_earned"),
-            @Result(property = "habitId", column = "habit_id")
+            @Result(property = "habitId", column = "habit_id", typeHandler = UUIDTypeHandler.class,
+                    one = @One(select = "org.example.miniprojectspring.repository.HabitRepository.getHabitById"))
     })
-    HabitLog getHabitLogByHabitId(Integer page, Integer size, UUID habitId);
+    HabitLog getHabitLogByHabitId(UUID habitId);
 
     //Query Post Method
     @Select("""

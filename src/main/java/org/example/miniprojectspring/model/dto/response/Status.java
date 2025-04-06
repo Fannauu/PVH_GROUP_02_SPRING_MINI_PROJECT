@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 //@AllArgsConstructor
 //@NoArgsConstructor
 public enum Status {
-        COMPLETE,
+        COMPLETED,
         MISSED
 }

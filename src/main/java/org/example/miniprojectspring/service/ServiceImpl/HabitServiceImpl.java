@@ -6,6 +6,8 @@ import org.example.miniprojectspring.repository.HabitRepository;
 import org.example.miniprojectspring.service.HabitService;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class HabitServiceImpl implements HabitService {
 
@@ -19,6 +21,11 @@ public class HabitServiceImpl implements HabitService {
     @Override
     public Habit createHabit(HabitRequest habitRequest) {
         return habitRepository.createHabit(habitRequest);
+    }
+    // Get Method By ID
+    @Override
+    public Habit getHabitById(UUID habitId) {
+        return habitRepository.getHabitById(habitId);
     }
 
 

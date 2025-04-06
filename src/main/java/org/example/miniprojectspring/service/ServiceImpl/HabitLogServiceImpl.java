@@ -16,11 +16,11 @@ public class HabitLogServiceImpl implements HabitLogService {
     public HabitLogServiceImpl(HabitLogRepository habitlogRepository) {
         this.habitlogRepository = habitlogRepository;
     }
+
     // Get By ID Method
     @Override
-    public HabitLog getHabitLogByHabitId(Integer offset, Integer size, UUID habitId) {
-        Integer page = (offset -1) * size;
-        return habitlogRepository.getHabitLogByHabitId(page, size, habitId);
+    public HabitLog getHabitLogByHabitId(UUID habitId) {
+        return habitlogRepository.getHabitLogByHabitId(habitId);
     }
 
     // Post Method

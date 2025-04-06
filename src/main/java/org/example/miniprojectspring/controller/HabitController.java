@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/habits")
@@ -38,19 +38,19 @@ public class HabitController {
 //        );
 //    }
 
-//    @Operation(summary = "Get habits by ID")
-//    @GetMapping("/{habit-id}")
-//    public ResponseEntity<ApiResponse<Habit>> getHabitById(@PathVariable("habit-id") Integer id) {
-//        return ResponseEntity.status(HttpStatus.OK).body(
-//                ApiResponse.<Habit>builder()
-//                        .success(true)
-//                        .message("Get habits by ID successfully")
-//                        .payload(null)
-//                        .httpStatus(HttpStatus.OK)
-//                        .timestamp(LocalDateTime.now())
-//                        .build()
-//        );
-//    }
+    @Operation(summary = "Get habits by ID")
+    @GetMapping("/{habit-id}")
+    public ResponseEntity<ApiResponse<Habit>> getHabitById(@PathVariable("habit-id") UUID habitId) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponse.<Habit>builder()
+                        .success(true)
+                        .message("Get habits by ID successfully")
+                        .payload(habitService.getHabitById(habitId))
+                        .httpStatus(HttpStatus.OK)
+                        .timestamp(LocalDateTime.now())
+                        .build()
+        );
+    }
 
     // Post Method
     @Operation(summary = "Create a new habits")

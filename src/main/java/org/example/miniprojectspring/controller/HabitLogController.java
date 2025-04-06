@@ -25,15 +25,12 @@ public class HabitLogController {
     // Get Method
     @Operation(summary = "Get all habit logs by habit ID ")
     @GetMapping("/{habit-id}")
-    public ResponseEntity<ApiResponse<HabitLog>> getHabitLogByHabitId(
-            @RequestParam(defaultValue = "1") Integer offset,
-            @RequestParam(defaultValue = "10") Integer limit,
-            @PathVariable("habit-id") UUID habitId) {
+    public ResponseEntity<ApiResponse<HabitLog>> getHabitLogByHabitId(@PathVariable("habit-id") UUID habitId) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 ApiResponse.<HabitLog>builder()
                         .success(true)
                         .message("Habit log created successfully")
-                        .payload(habitLogService.getHabitLogByHabitId(offset, limit, habitId))
+                        .payload(habitLogService.getHabitLogByHabitId(habitId))
                         .httpStatus(HttpStatus.OK)
                         .timestamp(LocalDateTime.now())
                         .build()
