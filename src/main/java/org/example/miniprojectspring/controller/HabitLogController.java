@@ -2,6 +2,8 @@ package org.example.miniprojectspring.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.example.miniprojectspring.model.dto.request.HabitLogRequest;
 import org.example.miniprojectspring.model.dto.response.ApiResponse;
 import org.example.miniprojectspring.model.entity.HabitLog;
@@ -28,12 +30,12 @@ public class HabitLogController {
     // Get Method
     @Operation(summary = "Get all habit logs by habit ID ")
     @GetMapping("/{habit-id}")
-    public ResponseEntity<ApiResponse<List<HabitLog>>> getHabitLogByHabitId(@PathVariable("habit-id") UUID id) {
+    public ResponseEntity<ApiResponse<List<HabitLog>>> getHabitLogByHabitId(@PathVariable("habit-id") UUID id , @Positive @Valid @RequestParam(defaultValue = "10") Integer size ,@Positive @RequestParam(defaultValue = "1") Integer page) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 ApiResponse.<List<HabitLog>>builder()
                         .success(true)
                         .message("Habit log created successfully")
-                        .payload(habitLogService.getHabitLogByHabitId(id))
+                        .payload(habitLogService.getHabitLogByHabitId(id,size,page))
                         .httpStatus(HttpStatus.OK)
                         .timestamp(LocalDateTime.now())
                         .build()

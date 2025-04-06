@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface HabitLogService {
     // Get By ID Method
-    List<HabitLog> getHabitLogByHabitId(UUID id);
+    List<HabitLog> getHabitLogByHabitId(UUID id,Integer size,Integer page);
     // Post Method
     HabitLog createHabitLog(HabitLogRequest habitLogRequest);
 

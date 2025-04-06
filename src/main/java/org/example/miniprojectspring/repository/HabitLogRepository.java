@@ -15,6 +15,8 @@ public interface HabitLogRepository {
     @Select("""
     SELECT * FROM habit_logs
     WHERE habit_id = #{habitId}
+    offset #{size} * (#{page} -1)
+    limit #{size}
 """)
     @Results(id = "habitLogMapper", value = {
             @Result(property = "id", column = "habit_log_id"),
@@ -24,7 +26,7 @@ public interface HabitLogRepository {
             @Result(property = "habitId", column = "habit_id",
                     one = @One(select = "org.example.miniprojectspring.repository.HabitRepository.getHabitById"))
     })
-    List<HabitLog> getHabitLogByHabitId(UUID habitId);
+    List<HabitLog> getHabitLogByHabitId(UUID habitId,Integer size,Integer page);
 
     //Query Post Method
     @Select("""

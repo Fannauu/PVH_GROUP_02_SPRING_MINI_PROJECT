@@ -27,13 +27,13 @@ public class HabitLogImpl implements HabitLogService {
 
     // Get By ID Method
     @Override
-    public List<HabitLog> getHabitLogByHabitId(UUID id) {
+    public List<HabitLog> getHabitLogByHabitId(UUID id,Integer size, Integer page) {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         //Get Current User By Email
         AppUser appUser =  appUserRepository.getUserBYEmail(authentication.getName());
         UserDTO userDTO = appUser.toDto(appUser);
         appUserRepository.getCurrentUserById(userDTO.getId());
-        return habitLogRepository.getHabitLogByHabitId(id);
+        return habitLogRepository.getHabitLogByHabitId(id,size,page);
     }
 
     // Post Method

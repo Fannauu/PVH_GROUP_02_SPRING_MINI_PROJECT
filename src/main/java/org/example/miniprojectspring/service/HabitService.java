@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface HabitService {
-    List<Habit> getAllHabits();
+    List<Habit> getAllHabits(Integer size, Integer page);
     Habit postHabits(HabitRequest habitRequest);
     Habit getHabitById(UUID id);
 

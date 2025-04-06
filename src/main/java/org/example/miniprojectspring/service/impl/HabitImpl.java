@@ -25,7 +25,7 @@ public class HabitImpl implements HabitService{
     private final AppUserRepository appUserRepository;
 
     @Override
-    public List<Habit> getAllHabits() {
+    public List<Habit> getAllHabits(Integer size, Integer page) {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         //Get Current User By Email
         AppUser appUser =  appUserRepository.getUserBYEmail(authentication.getName());
@@ -33,7 +33,7 @@ public class HabitImpl implements HabitService{
         // get current user by id
         appUserRepository.getCurrentUserById(userDTO.getId());
 
-        return habitRepository.getAllHabits();
+        return habitRepository.getAllHabits(size, page);
     }
 
     @Override

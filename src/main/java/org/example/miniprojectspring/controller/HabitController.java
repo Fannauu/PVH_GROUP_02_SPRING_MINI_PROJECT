@@ -3,6 +3,8 @@ package org.example.miniprojectspring.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.example.miniprojectspring.model.dto.request.HabitRequest;
 import org.example.miniprojectspring.model.dto.response.ApiResponse;
 import org.example.miniprojectspring.model.entity.Habit;
@@ -28,13 +30,13 @@ public class HabitController {
 
     @Operation(summary = "Get all habits")
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Habit>>> getAllHabits() {
-        System.out.println("getAllHabits"+ habitService.getAllHabits());
+    public ResponseEntity<ApiResponse<List<Habit>>> getAllHabits(@Positive @Valid @RequestParam(defaultValue = "10") Integer size ,@Positive @RequestParam(defaultValue = "1") Integer page) {
+//        System.out.println("getAllHabits"+ habitService.getAllHabits());
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.<List<Habit>>builder()
                         .success(true)
                         .message("Get all habits successfully")
-                        .payload(habitService.getAllHabits())
+                        .payload(habitService.getAllHabits(size,page))
                         .httpStatus(HttpStatus.OK)
                         .timestamp(LocalDateTime.now())
                         .build()
