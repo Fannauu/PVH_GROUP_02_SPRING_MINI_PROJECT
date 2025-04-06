@@ -33,7 +33,10 @@ public class AppUserImpl implements AppUserService {
      // Should print true if user is verified
 
         return user;
-//        return appUserRepository.getUserByEmail(email);
+////        return appUserRepository.getUserByEmail(email);
+//        if (identifier.contains("@")){
+//            return appUserRepository.getUserBYEmail(identifier);}
+//        return appUserRepository.getByUserName(identifier);
     }
 
     public UserDTO getAuthenticatedUser() {

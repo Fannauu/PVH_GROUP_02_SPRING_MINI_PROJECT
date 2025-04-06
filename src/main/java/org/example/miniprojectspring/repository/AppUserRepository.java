@@ -7,6 +7,7 @@ import org.example.miniprojectspring.model.dto.request.AppUserRequest;
 import org.example.miniprojectspring.model.dto.request.ProfileRequest;
 import org.example.miniprojectspring.model.dto.response.UserDTO;
 import org.example.miniprojectspring.model.entity.AppUser;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.UUID;
 
@@ -76,5 +77,7 @@ public interface AppUserRepository {
         WHERE email = #{request.email}
 """)
     void save(@Param("request") AppUser appUser);
+
+
 
 }

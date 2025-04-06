@@ -2,8 +2,7 @@ package org.example.miniprojectspring.controller;
 
 
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import org.example.miniprojectspring.exception.NotFoundException;
 import org.example.miniprojectspring.jwt.JwtService;
 import org.example.miniprojectspring.model.dto.request.AppUserLoginRequest;
 import org.example.miniprojectspring.model.dto.request.AppUserRequest;
@@ -21,7 +20,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -37,13 +36,15 @@ public class AuthController {
     private final JwtService jwtService;
     private final OtpService otpService;
     private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthController(AppUserService appUserService, AuthenticationManager authenticationManager, JwtService jwtService, OtpService otpService, EmailService emailService) {
+    public AuthController(AppUserService appUserService, AuthenticationManager authenticationManager, JwtService jwtService, OtpService otpService, EmailService emailService, PasswordEncoder passwordEncoder) {
         this.appUserService = appUserService;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.otpService = otpService;
         this.emailService = emailService;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -110,8 +111,13 @@ public class AuthController {
         AppUser user = appUserService.getUserByEmail(appUserLoginRequest.getIdentifier());
         System.out.println("user2 : " + appUserLoginRequest.getIdentifier());
         if (!user.getIsVerified()) {
-            System.out.println("user nulll");
-            return null;
+            throw new NotFoundException("User "  +appUserLoginRequest.getIdentifier() + " are not verified");
+        }
+        if(!passwordEncoder.matches(appUserLoginRequest.getPassword(), user.getPassword())) {
+            throw new BadCredentialsException("Wrong password");
+        }
+        if (!user.getEmail().equals(appUserLoginRequest.getIdentifier())) {
+            throw new BadCredentialsException("Wrong email");
         }
 
         // Generate token
