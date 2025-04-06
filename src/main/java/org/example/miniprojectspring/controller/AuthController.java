@@ -195,6 +195,7 @@ public class AuthController {
 
 
     //Resend Email to a new OTP
+    @Operation(summary = "Resend otp")
     @PostMapping("/resend")
     public ResponseEntity<ApiResponse> resend(@RequestParam String email) {
 

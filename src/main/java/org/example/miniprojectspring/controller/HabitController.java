@@ -74,7 +74,7 @@ public class HabitController {
 
     @Operation(summary = "Update habits by ID")
     @PutMapping("/{habit-id}")
-    public ResponseEntity<ApiResponse<Habit>> updateHabit(@Valid @PathVariable("habit-id") UUID id, @RequestBody HabitRequest habitRequest) {
+    public ResponseEntity<ApiResponse<Habit>> updateHabit( @PathVariable("habit-id") UUID id, @RequestBody @Valid HabitRequest habitRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.<Habit>builder()
                         .success(true)

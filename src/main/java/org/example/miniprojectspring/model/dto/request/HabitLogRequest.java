@@ -15,7 +15,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class HabitLogRequest {
-    @NotBlank(message = "status can't blank")
     private Status status;
     @NotBlank(message = "status can't blank")
     private UUID habitId;

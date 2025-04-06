@@ -18,6 +18,5 @@ public class HabitRequest {
     private String title;
     @NotBlank(message = "Title can't blank")
     private String description;
-    @NotBlank(message = "Title can't blank")
     private Frequency frequency;
 }

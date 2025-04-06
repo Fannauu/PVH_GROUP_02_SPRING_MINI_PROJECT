@@ -45,7 +45,7 @@ public class HabitLogController {
     // Post Method
     @Operation(summary = "Create a new habit log")
     @PostMapping
-    public ResponseEntity<ApiResponse<HabitLog>> createHabitLog(@Valid @RequestBody HabitLogRequest habitLogRequest) {
+    public ResponseEntity<ApiResponse<HabitLog>> createHabitLog( @RequestBody @Valid HabitLogRequest habitLogRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 ApiResponse.<HabitLog>builder()
                         .success(true)
