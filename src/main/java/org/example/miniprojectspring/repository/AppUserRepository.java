@@ -21,9 +21,9 @@ public interface AppUserRepository {
      RETURNING *
  """)
     @Results(id = "appUserMapper", value = {
+            @Result(property = "id", column = "app_user_id", typeHandler = UUIDTypeHandler.class),
             @Result(property = "name", column = "username"),
             @Result(property = "profileImage", column = "profile_image"),
-            @Result(property = "id", column = "app_user_id", typeHandler = UUIDTypeHandler.class),
             @Result(property = "xpLevel", column = "xp"),
             @Result(property = "isVerified", column = "is_verified"),
             @Result(property = "createdAt", column = "created_at")
@@ -31,12 +31,24 @@ public interface AppUserRepository {
     )
     AppUser register(@Param("request") AppUserRequest appUserRequest);
 
+
+    @Select("""
+    SELECT * FROM app_users WHERE app_user_id = #{id}
+    """)
+    AppUser getById(UUID id);
+
+
+
+
+
+
     @Select("""
          SELECT * FROM app_users
          WHERE email= #{email}
          """)
     @ResultMap("appUserMapper")
     AppUser getUserBYEmail(String email);
+
 
 
     @Select("""

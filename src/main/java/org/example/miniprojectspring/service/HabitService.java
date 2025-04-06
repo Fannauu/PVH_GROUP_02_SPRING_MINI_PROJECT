@@ -13,9 +13,9 @@ public interface HabitService {
 
     Habit getHabitById(UUID id);
 
-    List<Habit> getAllHabits(String email); // ✅ Add this
+//    List<Habit> getAllHabits(String email); // ✅ Add this
 
-    List<Habit> getCurrentUserHabits();
+//    List<Habit> getCurrentUserHabits();
 
     Habit updateHabitById(UUID id, HabitRequest habitRequest);
 

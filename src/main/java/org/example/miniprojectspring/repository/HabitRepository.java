@@ -13,10 +13,7 @@ import java.util.UUID;
 @Mapper
 public interface HabitRepository {
     @Select("""
-    SELECT h.*, u.*
-    FROM habits h
-    JOIN app_users u ON h.app_user_id = u.app_user_id
-    WHERE u.email = #{email}
+    SELECT * FROM habits
 """)
     @Results(id = "habitMapper", value = {
             @Result(property = "id", column = "habit_id", typeHandler = UUIDTypeHandler.class),
@@ -25,11 +22,11 @@ public interface HabitRepository {
             @Result(property = "xpLevel", column = "xp"),
             @Result(property = "isActive", column = "is_active"),
             @Result(property = "createAt", column = "created_at"),
-            @Result(property = "appUser", column = "email",
-                    one = @One(select = "org.example.miniprojectspring.repository.AppUserRepository.getUserBYEmail")
+            @Result(property = "appUser", column = "app_user_id",
+                    one = @One(select = "org.example.miniprojectspring.repository.AppUserRepository.getById")
             )
     })
-    List<Habit> getAllHabits(@Param("email") String email);
+    List<Habit> getAllHabits();
 
 
 //    fixed this

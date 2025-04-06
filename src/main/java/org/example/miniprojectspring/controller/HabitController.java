@@ -29,12 +29,13 @@ public class HabitController {
     @Operation(summary = "Get all habits")
     @GetMapping
     public ResponseEntity<ApiResponse<List<Habit>>> getAllHabits() {
-        List<Habit> habits = habitService.getCurrentUserHabits();
+//        List<Habit> habits = habitService.getCurrentUserHabits();
+//        List<Habit> habits = habitService.getAllHabits();
         return ResponseEntity.ok(
                 ApiResponse.<List<Habit>>builder()
                         .success(true)
                         .message("Get all habits successfully")
-                        .payload(habits)
+                        .payload(habitService.getAllHabits())
                         .httpStatus(HttpStatus.OK)
                         .timestamp(LocalDateTime.now())
                         .build()

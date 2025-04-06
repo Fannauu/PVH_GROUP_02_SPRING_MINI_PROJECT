@@ -22,40 +22,44 @@ public class HabitImpl implements HabitService{
     private final HabitRepository habitRepository;
     private final AppUserRepository appUserRepository;
 
+//    @Override
+//    public List<Habit> getAllHabits() {
+//        // Optional: if you want to return all habits regardless of user
+//        return habitRepository.getAllHabits(null); // Only if your query supports null
+//    }
+//
+//    @Override
+//    public List<Habit> getAllHabits(String email) {
+//        return habitRepository.getAllHabits(email);
+//    }
+//
+//    @Override
+//    public List<Habit> getCurrentUserHabits() {
+//        String email = SecurityUtil.getCurrentUserEmail();
+//        System.out.println("Current authenticated user email: " + email); // ✅ Print it
+//
+//        if (email == null) {
+//            throw new RuntimeException("Unauthorized access - no logged-in user");
+//        }
+//        return getAllHabits(email);
+//    }
+
+
     @Override
     public List<Habit> getAllHabits() {
-        // Optional: if you want to return all habits regardless of user
-        return habitRepository.getAllHabits(null); // Only if your query supports null
+        return habitRepository.getAllHabits();
     }
 
-    @Override
-    public List<Habit> getAllHabits(String email) {
-        return habitRepository.getAllHabits(email);
-    }
-
-    @Override
-    public List<Habit> getCurrentUserHabits() {
-        String email = SecurityUtil.getCurrentUserEmail();
-        System.out.println("Current authenticated user email: " + email); // ✅ Print it
-
-        if (email == null) {
-            throw new RuntimeException("Unauthorized access - no logged-in user");
-        }
-        return getAllHabits(email);
-    }
-
-
-
-    //    @Override
-//    public List<Habit> getAllHabits() {
+    //        @Override
+//        public List<Habit> getAllHabits() {
 //        String email = SecurityUtil.getCurrentUserEmail();
 //        return habitRepository.getAllHabits(email);
 //    //        List<Habit> habit = habitRepository.getAllHabits(appUser.getEmail());
 //    //        return habit;
-//    }
+//         }
     @Override
     public Habit postHabits(HabitRequest habitRequest) {
-        System.out.println("Habit post"+habitRequest.getTitle());
+        System.out.println("Habit post" +habitRequest.getTitle());
         return habitRepository.postHabits(habitRequest);
     }
 
